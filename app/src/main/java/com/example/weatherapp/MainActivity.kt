@@ -7,9 +7,12 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
+import java.time.LocalTime
+
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -20,8 +23,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.setIcon(R.mipmap.ic_launcher)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setLogo(R.mipmap.ic_launcher)
 
         weatherTask().execute()
+
 
     }
 
@@ -55,34 +62,41 @@ class MainActivity : AppCompatActivity() {
                         val sys = jsonObj.getJSONObject("sys")
                         val wind = jsonObj.getJSONObject("wind")
                         val weather = jsonObj.getJSONArray("weather").getJSONObject(0)
-
                         val updatedAt:Long = jsonObj.getLong("dt")
                         val updatedAtText = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(updatedAt*1000))
                         val temp = main.getString("temp")+"°C"
-                        val tempMin = "Min Temp: " + main.getString("temp_min")+"°C"
-                        val tempMax = "Max Temp: " + main.getString("temp_max")+"°C"
                         val pressure = main.getString("pressure")
                         val humidity = main.getString("humidity")
-
                         val sunrise:Long = sys.getLong("sunrise")
                         val sunset:Long = sys.getLong("sunset")
                         val windSpeed = wind.getString("speed")
                         val weatherDescription = weather.getString("description")
-
                         val address = jsonObj.getString("name")+", "+sys.getString("country")
+
+
+
+
+
 
                         /* Populating extracted data into our views */
                         findViewById<TextView>(R.id.address).text = address
                         findViewById<TextView>(R.id.updated_at).text =  updatedAtText
                         findViewById<TextView>(R.id.status).text = weatherDescription.capitalize()
                         findViewById<TextView>(R.id.temp).text = temp
-                        findViewById<TextView>(R.id.temp_min).text = tempMin
-                        findViewById<TextView>(R.id.temp_max).text = tempMax
                         findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise*1000))
                         findViewById<TextView>(R.id.sunset).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset*1000))
-                        findViewById<TextView>(R.id.wind).text = windSpeed
+                        findViewById<TextView>(R.id.wind).text = windSpeed+"km/h"
                         findViewById<TextView>(R.id.pressure).text = pressure
-                        findViewById<TextView>(R.id.humidity).text = humidity
+                        findViewById<TextView>(R.id.humidity).text = humidity+"%"
+
+
+                        if(weatherDescription.capitalize()=="Rain"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Broken clouds"
+                            ||weatherDescription.capitalize()=="Shower rain"||weatherDescription.capitalize()=="Mist")
+                        {
+                            mainBack.setBackgroundResource(R.drawable.bg_rain)
+                        }else if(weatherDescription.capitalize()=="Snow"){
+                            mainBack.setBackgroundResource(R.drawable.bg_snow)
+                        }
 
                         /* Views populated, Hiding the loader, Showing the main design */
                         findViewById<ProgressBar>(R.id.loader).visibility = View.GONE

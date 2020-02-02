@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainBack"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,23 +26,24 @@
             android:layout_height="wrap_content" android:orientation="vertical"
             android:layout_centerInParent="true">
 
-            <TextView android:id="@+id/status" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:textSize="18dp"
-                android:layout_gravity="center"
-                android:text="Clear Sky"/>
             <TextView android:id="@+id/temp" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:textSize="90dp"
                 android:fontFamily="sans-serif-thin" android:layout_gravity="center"
                 android:text="29°C"/>
 
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Clear Sky"
+                android:textSize="18dp" />
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal" android:gravity="center">
-                <TextView android:id="@+id/temp_min" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:text="Min Temp: 05:05 AM"/>
+
                 <Space android:layout_width="50dp" android:layout_height="wrap_content"/>
 
-                <TextView android:id="@+id/temp_max" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:text="Max Temp: 05:05 PM"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -141,10 +144,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Asilbek Tilavov"
-                        android:textSize="14dp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
     </RelativeLayout>
 
 
@@ -154,7 +158,7 @@
 
     <TextView android:id="@+id/errorText" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_centerInParent="true"
-        android:visibility="gone" android:text="Something went wrong"/>
+        android:visibility="gone" android:text="No Enternet Connection"/>
 
 
 </RelativeLayout>
