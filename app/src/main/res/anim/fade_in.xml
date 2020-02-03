@@ -3,8 +3,8 @@
 
     <alpha
         android:toAlpha="1.0"
-        android:fromAlpha="0.0"
-        android:duration="4000"
+        android:fromAlpha="0.2"
+        android:duration="5000"
         android:repeatMode="reverse"
         android:repeatCount="infinite"
         />

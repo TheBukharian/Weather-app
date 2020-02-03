@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setIcon(R.mipmap.ic_launcher)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.mipmap.ic_launcher)
-
+        supportActionBar?.setDisplayUseLogoEnabled(true)
         weatherTask().execute()
 
         val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                         findViewById<TextView>(R.id.humidity).text = humidity+"%"
 
 
-                        if(weatherDescription.capitalize()=="Rain"||weatherDescription.capitalize()=="Broken clouds"
+                        if(weatherDescription.capitalize()=="Rain"
                             ||weatherDescription.capitalize()=="Shower rain"||weatherDescription.capitalize()=="Light intensity shower rain")
                         {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                             WeatherImage.setTag(R.drawable.snowflake)
 
 
-                        }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist") {
+                        }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Broken clouds"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist") {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
                             WeatherImage.setImageResource(R.drawable.clouds)
                             WeatherImage.setTag(R.drawable.clouds)
