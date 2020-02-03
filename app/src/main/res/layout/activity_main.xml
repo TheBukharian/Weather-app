@@ -15,6 +15,7 @@
             android:id="@+id/addressContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:background="@drawable/address"
             android:gravity="center"
             android:orientation="vertical">
@@ -164,7 +165,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/weatherUpdateBtn"
             android:layout_width="43dp"
             android:layout_height="30dp"
             android:layout_marginLeft="320dp"
@@ -184,24 +185,35 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/WeatherImage"
                 android:layout_width="300dp"
                 android:layout_height="150dp"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:srcCompat="@drawable/sunny" />
         </LinearLayout>
 
 
+
+
     </RelativeLayout>
+
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/update_btn"
+        android:layout_centerInParent="true"
+        app:srcCompat="@android:drawable/ic_popup_sync"
+        android:visibility="gone"
+        />
 
 
     <ProgressBar android:id="@+id/loader" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_centerInParent="true"
         android:visibility="gone"/>
 
-    <TextView android:id="@+id/errorText" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_centerInParent="true"
-        android:visibility="gone" android:text="No Enternet Connection"/>
 
 
 </RelativeLayout>

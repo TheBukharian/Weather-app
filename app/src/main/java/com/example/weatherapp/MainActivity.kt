@@ -3,9 +3,9 @@ package com.example.weatherapp
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
@@ -17,7 +17,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val CITY: String = "tashkent,uz"
+    var CITY: String = "tashkent,uz"
     val API: String = "263c55c249bef2c72943bbcc77cb742d"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +29,37 @@ class MainActivity : AppCompatActivity() {
 
         weatherTask().execute()
 
+        val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
+        val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.rotation)
+        val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
+
+        image.startAnimation(animation1)
+
+        if (WeatherImage.getTag()==R.drawable.sunny){
+            image.startAnimation(animation1)
+            WeatherImage.setOnClickListener {
+                image.startAnimation(animation1)
+            }
+        }else {
+            image.startAnimation(animation3)
+
+
+            WeatherImage.setOnClickListener {
+                image.startAnimation(animation3)
+
+
+            }
+        }
+
+
+        weatherUpdateBtn.setOnClickListener {
+            weatherTask().execute()
+
+        }
+        imageButton.setOnClickListener {
+            weatherTask().execute()
+
+        }
 
     }
 
@@ -38,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                     /* Showing the ProgressBar, Making the main design GONE */
                     findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
                     findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
-                    findViewById<TextView>(R.id.errorText).visibility = View.GONE
+                    findViewById<ImageButton>(R.id.imageButton).visibility = View.GONE
                 }
 
                 override fun doInBackground(vararg params: String?): String? {
@@ -90,12 +121,30 @@ class MainActivity : AppCompatActivity() {
                         findViewById<TextView>(R.id.humidity).text = humidity+"%"
 
 
-                        if(weatherDescription.capitalize()=="Rain"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Broken clouds"
-                            ||weatherDescription.capitalize()=="Shower rain"||weatherDescription.capitalize()=="Mist")
+                        if(weatherDescription.capitalize()=="Rain"||weatherDescription.capitalize()=="Broken clouds"
+                            ||weatherDescription.capitalize()=="Shower rain"||weatherDescription.capitalize()=="Light intensity shower rain")
                         {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
+                            WeatherImage.setImageResource(R.drawable.rain)
+                            WeatherImage.setTag(R.drawable.rain)
+
+
                         }else if(weatherDescription.capitalize()=="Snow"){
                             mainBack.setBackgroundResource(R.drawable.bg_snow)
+                            WeatherImage.setImageResource(R.drawable.snowflake)
+                            WeatherImage.setTag(R.drawable.snowflake)
+
+
+                        }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist") {
+                            mainBack.setBackgroundResource(R.drawable.bg_rain)
+                            WeatherImage.setImageResource(R.drawable.clouds)
+                            WeatherImage.setTag(R.drawable.clouds)
+
+
+                        }else if (weatherDescription.capitalize()=="Overcast clouds"||weatherDescription.capitalize()=="Clear sky"){
+                            mainBack.setBackgroundResource(R.drawable.bg_sun)
+                            WeatherImage.setTag(R.drawable.sunny)
+                            WeatherImage.setImageResource(R.drawable.sunny)
                         }
 
                         /* Views populated, Hiding the loader, Showing the main design */
@@ -104,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
                     } catch (e: Exception) {
                         findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
-                        findViewById<TextView>(R.id.errorText).visibility = View.VISIBLE
+                        findViewById<ImageButton>(R.id.imageButton).visibility = View.VISIBLE
                     }
 
                 }
