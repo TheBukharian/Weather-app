@@ -3,24 +3,17 @@ package com.example.weatherapp
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_web_page.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-
 import java.util.*
-import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.rotation)
+        val animation2 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fast_rotation)
         val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
 
 
@@ -62,6 +56,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+        box1.setOnClickListener {
+            box1.startAnimation(animation2)
+        }
+        box2.setOnClickListener {
+            box2.startAnimation(animation2)
+        }
+        box3.setOnClickListener {
+            box3.startAnimation(animation2)
+        }
+        box4.setOnClickListener {
+            box4.startAnimation(animation2)
+        }
+        box5.setOnClickListener {
+            box5.startAnimation(animation2)
+        }
+        infoWeather.setOnClickListener {
+            infoWeather.startAnimation(animation2)
+        }
 
         weatherUpdateBtn.setOnClickListener {
             weatherTask().execute()
