@@ -1,19 +1,26 @@
 package com.example.weatherapp
 
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_web_page.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 
 import java.util.*
+import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +39,10 @@ class MainActivity : AppCompatActivity() {
         val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.rotation)
         val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
+
+
+
+
 
         image.startAnimation(animation1)
 
@@ -61,9 +72,30 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        infoWeather.setOnClickListener {
+            val intent=Intent(this,WebPage::class.java)
+            startActivity(intent)
+
+//            showAlert()
+        }
     }
 
-            inner class weatherTask() : AsyncTask<String, Void, String>() {
+    fun showAlert(){
+        val inflater=layoutInflater
+
+        val inflate_view=inflater.inflate(R.layout.activity_web_page,null)
+        val alertDialog=AlertDialog.Builder(this)
+        alertDialog.setIcon(R.mipmap.ic_launcher).setView(inflate_view)
+
+        val alert = alertDialog.create()
+        alert.show()
+
+    }
+
+
+
+
+    inner class weatherTask() : AsyncTask<String, Void, String>() {
                 override fun onPreExecute() {
                     super.onPreExecute()
                     /* Showing the ProgressBar, Making the main design GONE */
@@ -158,5 +190,6 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
+
         }
 
