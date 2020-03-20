@@ -3,22 +3,30 @@ package com.example.weatherapp
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
+    override fun onOptionClick(text: String) {
 
-    var CITY: String = "tashkent,uz"
+    }
+
+     var CITY: String = "Tashkent,UZ"
     val API: String = "263c55c249bef2c72943bbcc77cb742d"
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +35,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.mipmap.ic_launcher)
         supportActionBar?.setDisplayUseLogoEnabled(true)
-        weatherTask().execute()
+
+
 
         val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.rotation)
@@ -38,12 +47,12 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        image.startAnimation(animation1)
 
-        if (WeatherImage.getTag()==R.drawable.sunny){
+        if (WeatherImage.tag == 1){
             image.startAnimation(animation1)
             WeatherImage.setOnClickListener {
                 image.startAnimation(animation1)
+                Log.d("MainActivityTag","${WeatherImage.tag}")
             }
         }else {
             image.startAnimation(animation3)
@@ -51,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
             WeatherImage.setOnClickListener {
                 image.startAnimation(animation3)
-
+    Log.d("MainActivity","${WeatherImage.tag}")
 
             }
         }
@@ -79,36 +88,35 @@ class MainActivity : AppCompatActivity() {
         weatherUpdateBtn.setOnClickListener {
             weatherTask().execute()
 
+
         }
         imageButton.setOnClickListener {
             weatherTask().execute()
 
+        }
+        addressContainer.setOnClickListener {
+
+            val bottomSheet=BottomSheetEx()
+            bottomSheet.show(supportFragmentManager,"BottomSheetEx")
         }
 
         infoWeather.setOnClickListener {
             val intent=Intent(this,WebPage::class.java)
             startActivity(intent)
 
-//            showAlert()
+
+
+
+
         }
     }
 
-    fun showAlert(){
-        val inflater=layoutInflater
-
-        val inflate_view=inflater.inflate(R.layout.activity_web_page,null)
-        val alertDialog=AlertDialog.Builder(this)
-        alertDialog.setIcon(R.mipmap.ic_launcher).setView(inflate_view)
-
-        val alert = alertDialog.create()
-        alert.show()
-
-    }
 
 
 
 
-    inner class weatherTask() : AsyncTask<String, Void, String>() {
+
+    inner class weatherTask : AsyncTask<String, Void, String>() {
                 override fun onPreExecute() {
                     super.onPreExecute()
                     /* Showing the ProgressBar, Making the main design GONE */
@@ -120,9 +128,7 @@ class MainActivity : AppCompatActivity() {
                 override fun doInBackground(vararg params: String?): String? {
                     var response:String?
                     try{
-                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API").readText(
-                            Charsets.UTF_8
-                        )
+                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API").readText(Charsets.UTF_8)
                     }catch (e: Exception){
                         response = null
                     }
@@ -171,24 +177,24 @@ class MainActivity : AppCompatActivity() {
                         {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
                             WeatherImage.setImageResource(R.drawable.rain)
-                            WeatherImage.setTag(R.drawable.rain)
+                            WeatherImage.tag = R.drawable.rain
 
 
                         }else if(weatherDescription.capitalize()=="Snow"){
                             mainBack.setBackgroundResource(R.drawable.bg_snow)
                             WeatherImage.setImageResource(R.drawable.snowflake)
-                            WeatherImage.setTag(R.drawable.snowflake)
+                            WeatherImage.tag = R.drawable.snowflake
 
 
                         }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Broken clouds"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist") {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
                             WeatherImage.setImageResource(R.drawable.clouds)
-                            WeatherImage.setTag(R.drawable.clouds)
+                            WeatherImage.tag = R.drawable.clouds
 
 
                         }else if (weatherDescription.capitalize()=="Overcast clouds"||weatherDescription.capitalize()=="Clear sky"){
                             mainBack.setBackgroundResource(R.drawable.bg_sun)
-                            WeatherImage.setTag(R.drawable.sunny)
+                            WeatherImage.tag = 1
                             WeatherImage.setImageResource(R.drawable.sunny)
                         }
 

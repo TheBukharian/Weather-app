@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#75CE931C"
+    android:padding="5dp"
+    tools:context=".BottomSheetEx">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#46FFFFFF"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="208dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="Share this app:"
+            android:textColor="#ffff"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="2dp"
+
+
+
+            />
+
+        <Button
+            android:id="@+id/shareBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="150dp"
+            android:layout_weight="1"
+            android:background="@android:drawable/ic_menu_share"
+            android:backgroundTint="#ffff"
+            />
+
+
+    </LinearLayout>
+    android:layout_width="match_parent"
+    android:id="@+id/fragmentView"
+    android:layout_height="500dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/webRelativeLayout"
+        android:layout_height="wrap_content"
+        tools:context=".BottomSheetEx">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/one"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/bukhara"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/cities"
+                android:text="Bukhara" />
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@drawable/cities"
+                android:text="Samarkand"
+                android:id="@+id/samarkand"/>
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp">
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cities"
+                android:text="Navai"
+                android:id="@+id/navai"/>
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@drawable/cities"
+                android:text="London"
+                android:id="@+id/london"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="140dp">
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cities"
+                android:text="Milan"
+                android:id="@+id/milan"/>
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@drawable/cities"
+                android:text="Paris"
+                android:id="@+id/paris"/>
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>
