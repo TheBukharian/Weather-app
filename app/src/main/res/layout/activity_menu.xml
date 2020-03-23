@@ -10,7 +10,7 @@
 <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coverFlow"
+    android:id="@+id/cover_Flow"
     app:maxScaleFactor="1.5"
     app:reflectionGap="0px"
     app:rotationThreshold="0.5"
@@ -18,11 +18,11 @@
     app:spacing="0.6"
 >
     <TextSwitcher
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title"
+        android:id="@+id/textSwitcher"
         android:paddingBottom="16dp"
-        android:layout_allignParentBottom="true"
 
         >
 

@@ -4,15 +4,15 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import com.example.weatherapp.Model.Cities
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
     }
 
-     var CITY: String = "Tashkent,UZ"
+     var CITY = Cities( "Tashkent,UZ")
     val API: String = "263c55c249bef2c72943bbcc77cb742d"
 
 
@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
             WeatherImage.setOnClickListener {
                 image.startAnimation(animation1)
                 Log.d("MainActivityTag","${WeatherImage.tag}")
+                    println(CITY)
             }
         }else {
             image.startAnimation(animation3)
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                 override fun doInBackground(vararg params: String?): String? {
                     var response:String?
                     try{
-                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API").readText(Charsets.UTF_8)
+                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=${CITY.City}&units=metric&appid=$API").readText(Charsets.UTF_8)
                     }catch (e: Exception){
                         response = null
                     }
@@ -209,6 +210,16 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
                 }
             }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_nav,menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
 
         }
 

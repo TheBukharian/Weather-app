@@ -9,44 +9,24 @@
     tools:context=".BottomSheetEx">
 
 
-    <LinearLayout
+    <TextView
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#46FFFFFF"
-        android:weightSum="2"
-        android:orientation="horizontal">
+        android:layout_height="59dp"
+        android:layout_gravity="start"
+        android:background="#61FFFFFF"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="Select City :"
+        android:textColor="#ffff"
+        android:textSize="36sp"
+        android:textStyle="normal|bold|italic"
 
-        <TextView
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="208dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:text="Share this app:"
-            android:textColor="#ffff"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_marginStart="2dp"
+        />
 
 
 
-            />
 
-        <Button
-            android:id="@+id/shareBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="150dp"
-            android:layout_weight="1"
-            android:background="@android:drawable/ic_menu_share"
-            android:backgroundTint="#ffff"
-            />
-
-
-    </LinearLayout>
     android:layout_width="match_parent"
     android:id="@+id/fragmentView"
     android:layout_height="500dp">

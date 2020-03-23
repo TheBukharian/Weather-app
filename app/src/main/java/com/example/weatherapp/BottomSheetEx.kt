@@ -3,9 +3,12 @@ package com.example.weatherapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.weatherapp.MainActivity.weatherTask
+import com.example.weatherapp.Model.Cities
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.view.*
@@ -19,32 +22,44 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v =inflater.inflate(R.layout.fragment_bottom_sheet_ex, container, false)
-        val mainObj=MainActivity()
+        val v =inflater.inflate(R.layout.fragment_bottom_sheet_ex, container, true)
+        val mainObj= MainActivity()
 
-       v. shareBtn.setOnClickListener {
 
-            //Share this app from other apps!!!!!!!!!
+        v.bukhara.setOnClickListener { mainObj.CITY.City="Bukhara,UZ"
+            Log.d("BottomSheetEx",mainObj.CITY.City)
+            println(mainObj.CITY.City)
+//            MainActivity.putExtra()
+        }
+
+        v.samarkand.setOnClickListener {mainObj.CITY.City="Samarqand,UZ"
+            Log.d("BottomSheetEx",mainObj.CITY.City)
+            println(mainObj.CITY.City)
         }
 
 
+        v.navai.setOnClickListener { mainObj.CITY.City="Navoiy,UZ"
+            Log.d("BottomSheetEx",mainObj.CITY.City)
+            println(mainObj.CITY.City)
+        }
 
-        v.bukhara.setOnClickListener { mainObj.CITY="Bukhara,UZ"
-            println(mainObj.CITY)
+
+        v.london.setOnClickListener { mainObj.CITY.City="London,GB"
+            Log.d("BottomSheetEx",mainObj.CITY.City)
+            println(mainObj.CITY.City)
         }
-        v.samarkand.setOnClickListener {mainObj.CITY="Samarqand,UZ"
-            println(mainObj.CITY)
-            }
-        v.navai.setOnClickListener { mainObj.CITY="Navoiy,UZ"
-            println(mainObj.CITY)
+
+
+        v.paris.setOnClickListener { mainObj.CITY.City="Paris,FR"
+            Log.d("BottomSheetEx",mainObj.CITY.City)
+            println(mainObj.CITY.City)
         }
-        v.london.setOnClickListener { mainObj.CITY="London,GB"
-            println(mainObj.CITY)
-            }
-        v.paris.setOnClickListener { mainObj.CITY="Paris,FR"
-            println(mainObj.CITY)}
-        v.milan.setOnClickListener { mainObj.CITY="Milan,IT"
-            println(mainObj.CITY)}
+
+
+        v.milan.setOnClickListener { mainObj.CITY.City="Milan,IT"
+            Log.d("BottomSheetEx",mainObj.CITY.City)
+            println(mainObj.CITY.City)
+        }
 
 
 
