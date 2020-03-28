@@ -4,8 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class Cities(var City: String?):Parcelable {
-    constructor(parcel: Parcel) : this(parcel.readString()) {
-    }
+    constructor(parcel: Parcel) : this(parcel.readString()) {}
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(City)

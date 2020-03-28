@@ -1,6 +1,12 @@
 package com.example.weatherapp
 
+import android.app.Activity
+import android.app.StatusBarManager
 import android.content.Intent
+import android.content.Intent.*
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -11,21 +17,30 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
 import com.example.weatherapp.Model.Cities
+import com.example.weatherapp.Utility.EXTRA_CITY
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.core.app.ComponentActivity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import kotlin.system.exitProcess
+
 
 class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
     override fun onOptionClick(text: String) {
 
     }
 
-     var CITY = Cities( "Tashkent,UZ")
     val API: String = "263c55c249bef2c72943bbcc77cb742d"
+//    val CITY=intent.getParcelableExtra<Cities>(EXTRA_CITY)
 
+    val CITY:String?="Tashkent,UZ"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +50,6 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.mipmap.ic_launcher)
         supportActionBar?.setDisplayUseLogoEnabled(true)
-
 
 
         val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
@@ -52,8 +66,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
             image.startAnimation(animation1)
             WeatherImage.setOnClickListener {
                 image.startAnimation(animation1)
-                Log.d("MainActivityTag","${WeatherImage.tag}")
-                    println(CITY)
+//                    println(CITY.City)
             }
         }else {
             image.startAnimation(animation3)
@@ -129,7 +142,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                 override fun doInBackground(vararg params: String?): String? {
                     var response:String?
                     try{
-                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=${CITY.City}&units=metric&appid=$API").readText(Charsets.UTF_8)
+                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=$API").readText(Charsets.UTF_8)
                     }catch (e: Exception){
                         response = null
                     }
@@ -218,6 +231,42 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId){
+            R.id.shareMenu -> {
+               try{
+                 val shareIntent =Intent(ACTION_SEND)
+                   shareIntent.type = "text/plain"
+                   shareIntent.putExtra(EXTRA_SUBJECT,"Weather Info")
+                   var shareMessage = "\nLet`s try this Weather application:\n\n"
+                   shareMessage = shareMessage+ "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID+ "\n\n"
+                   shareIntent.putExtra(EXTRA_TEXT,shareMessage)
+                   startActivity(createChooser(shareIntent,"Share with "))
+               }
+               catch (e:Exception){
+                   Log.d("MainActivity","Couldn` t load the web site")
+               }
+            }
+            R.id.modeDarkLight->{
+                supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorAccent)))
+                box1.setBackgroundColor(Color.parseColor("#3C242424"))
+                box2.setBackgroundColor(Color.parseColor("#3C242424"))
+                box3.setBackgroundColor(Color.parseColor("#3C242424"))
+                box4.setBackgroundColor(Color.parseColor("#3C242424"))
+                box5.setBackgroundColor(Color.parseColor("#3C242424"))
+                infoWeather.setBackgroundColor(Color.parseColor("#86242424"))
+
+
+
+            }
+            R.id.exitMenu->{
+                android.os.Process.killProcess(android.os.Process.myPid())
+                exitProcess(1)
+            }
+
+
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
