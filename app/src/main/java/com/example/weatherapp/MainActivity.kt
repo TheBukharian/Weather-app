@@ -1,11 +1,8 @@
 package com.example.weatherapp
 
-import android.app.Activity
-import android.app.StatusBarManager
+
 import android.content.Intent
 import android.content.Intent.*
-import android.content.res.ColorStateList
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
@@ -18,20 +15,11 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ShareCompat
-import com.example.weatherapp.Model.Cities
-import com.example.weatherapp.Utility.EXTRA_CITY
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import androidx.appcompat.widget.SwitchCompat
-import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.*
 import kotlin.system.exitProcess
 
 
