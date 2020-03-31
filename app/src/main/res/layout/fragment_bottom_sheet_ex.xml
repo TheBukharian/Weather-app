@@ -4,34 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#75CE931C"
+    android:background="#3BAF6208"
     android:padding="5dp"
+    android:id="@+id/btmSheet"
     tools:context=".BottomSheetEx">
 
 
-    <TextView
-        style="@style/TextAppearance.AppCompat.Headline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:background="#61FFFFFF"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="fill_horizontal"
-        android:paddingLeft="10dp"
-        android:text="Select City "
-        android:textColor="#ffff"
-        android:textSize="36sp"
-        android:textStyle="normal|bold|italic"
-
-        />
 
 
 
 
-    android:layout_width="match_parent"
-    android:id="@+id/fragmentView"
-    android:layout_height="500dp">
+
     <RelativeLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:id="@+id/webRelativeLayout"
         android:layout_height="wrap_content"
@@ -113,13 +98,6 @@
 
 
         </LinearLayout>
-
-
-
-
-
-
-
 
     </RelativeLayout>
 

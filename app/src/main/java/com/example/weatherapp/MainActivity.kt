@@ -5,6 +5,7 @@ import android.app.StatusBarManager
 import android.content.Intent
 import android.content.Intent.*
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
@@ -29,6 +30,8 @@ import androidx.core.app.ComponentActivity
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import androidx.appcompat.widget.SwitchCompat
+import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.*
 import kotlin.system.exitProcess
 
 
@@ -53,11 +56,16 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
 
         val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
-        val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.rotation)
+        val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud_move)
         val animation2 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fast_rotation)
         val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
+        val animation4 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud2)
 
 
+
+
+        vintage.startAnimation(animation1)
+        vintageo.startAnimation(animation4)
 
 
 
@@ -117,12 +125,10 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
         infoWeather.setOnClickListener {
             val intent=Intent(this,WebPage::class.java)
             startActivity(intent)
-
-
-
-
-
         }
+
+
+
     }
 
 
@@ -194,6 +200,8 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                             WeatherImage.tag = R.drawable.rain
 
 
+
+
                         }else if(weatherDescription.capitalize()=="Snow"){
                             mainBack.setBackgroundResource(R.drawable.bg_snow)
                             WeatherImage.setImageResource(R.drawable.snowflake)
@@ -215,20 +223,106 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                         /* Views populated, Hiding the loader, Showing the main design */
                         findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
                         findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
+                        findViewById<ImageView>(R.id.vintage).visibility = View.VISIBLE
+                        findViewById<ImageView>(R.id.vintage2).visibility = View.VISIBLE
+                        findViewById<ImageView>(R.id.vintageo).visibility = View.VISIBLE
+                        findViewById<ImageView>(R.id.Error).visibility = View.GONE
+
+
 
                     } catch (e: Exception) {
                         findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
                         findViewById<ImageButton>(R.id.imageButton).visibility = View.VISIBLE
+                        findViewById<TextView>(R.id.Error).visibility = View.VISIBLE
+
                     }
 
                 }
             }
 
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_nav,menu)
+        val item = menu!!.findItem(R.id.switcher)
+        item.setActionView(R.layout.switch_layout)
+        val mySwitch = item.actionView.findViewById<Switch>(R.id.switchForActionBar)
+        mySwitch.setOnCheckedChangeListener { p0, isChecked ->
+            if (mySwitch.isChecked) {
+                Toast.makeText(this@MainActivity, "Dark Mode", Toast.LENGTH_LONG).show()
+
+
+                supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorAccent)))
+                box1.setBackgroundColor(Color.parseColor("#3C242424"))
+                box2.setBackgroundColor(Color.parseColor("#3C242424"))
+                box3.setBackgroundColor(Color.parseColor("#3C242424"))
+                box4.setBackgroundColor(Color.parseColor("#3C242424"))
+                box5.setBackgroundColor(Color.parseColor("#3C242424"))
+                infoWeather.setBackgroundColor(Color.parseColor("#86242424"))
+                mainBack.setBackgroundResource(R.drawable.dark_theme)
+                if(status.text=="Rain"
+                    ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
+                {
+                    WeatherImage.setImageResource(R.drawable.rain)
+
+
+
+
+                }else if(status.text=="Snow"){
+                    WeatherImage.setImageResource(R.drawable.snowflake)
+
+
+                }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
+                    WeatherImage.setImageResource(R.drawable.clouds)
+
+
+                }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
+                    WeatherImage.setImageResource(R.drawable.sunny)
+                }
+
+            } else {
+                Toast.makeText(this@MainActivity, "Light Mode", Toast.LENGTH_LONG).show()
+
+                supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorPrimaryDark)))
+                box1.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                box2.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                box3.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                box4.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                box5.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                infoWeather.setBackgroundColor(Color.parseColor("#83FDFDFD"))
+                mainBack.setBackgroundResource(R.drawable.bg_sun)
+                if(status.text=="Rain"
+                    ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
+                {
+                    mainBack.setBackgroundResource(R.drawable.bg_rain)
+                    WeatherImage.setImageResource(R.drawable.rain)
+
+
+
+
+                }else if(status.text=="Snow"){
+                    mainBack.setBackgroundResource(R.drawable.bg_snow)
+                    WeatherImage.setImageResource(R.drawable.snowflake)
+
+
+                }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
+                    mainBack.setBackgroundResource(R.drawable.bg_rain)
+                    WeatherImage.setImageResource(R.drawable.clouds)
+
+
+                }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
+                    mainBack.setBackgroundResource(R.drawable.bg_sun)
+                    WeatherImage.setImageResource(R.drawable.sunny)
+                }
+            }
+        }
+
 
         return super.onCreateOptionsMenu(menu)
+
     }
+
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
@@ -247,28 +341,24 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                    Log.d("MainActivity","Couldn` t load the web site")
                }
             }
-            R.id.modeDarkLight->{
-                supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorAccent)))
-                box1.setBackgroundColor(Color.parseColor("#3C242424"))
-                box2.setBackgroundColor(Color.parseColor("#3C242424"))
-                box3.setBackgroundColor(Color.parseColor("#3C242424"))
-                box4.setBackgroundColor(Color.parseColor("#3C242424"))
-                box5.setBackgroundColor(Color.parseColor("#3C242424"))
-                infoWeather.setBackgroundColor(Color.parseColor("#86242424"))
 
-
-
-            }
             R.id.exitMenu->{
                 android.os.Process.killProcess(android.os.Process.myPid())
                 exitProcess(1)
             }
+            R.id.More->{
+                Toast.makeText(this@MainActivity, "Google Play Opened...", Toast.LENGTH_LONG).show()
+
+
+            }
+
 
 
         }
 
         return super.onOptionsItemSelected(item)
     }
+
 
         }
 

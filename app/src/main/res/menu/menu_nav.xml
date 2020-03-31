@@ -2,18 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <item
+        android:id="@+id/switcher"
+        android:title="Switch"
+        app:actionLayout="@layout/switch_layout"
+        app:showAsAction="ifRoom"
+        />
+
     <item android:title="Share App"
         android:id="@+id/shareMenu"
         android:icon="@android:drawable/ic_menu_share"
         app:showAsAction="ifRoom"
         />
     <item android:id="@+id/More"
-        android:title="More Apps" />
-    <item android:id="@+id/modeDarkLight"
-        android:title="Mode"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:checkable="true"
-         />
+        android:title="More Apps"
+        />
+
+
 
 
     <item android:id="@+id/exitMenu"

@@ -2,16 +2,21 @@ package com.example.weatherapp
 
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBar
 import com.example.weatherapp.MainActivity.weatherTask
 import com.example.weatherapp.Model.Cities
 import com.example.weatherapp.Utility.EXTRA_CITY
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.*
 import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.view.*
 
 
@@ -63,6 +68,8 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
             Log.d("BottomSheetEx",CITY.City)
             println(CITY.City)
         }
+
+
 
 
 
