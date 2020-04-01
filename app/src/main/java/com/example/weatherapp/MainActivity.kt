@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                         findViewById<ImageView>(R.id.vintage).visibility = View.VISIBLE
                         findViewById<ImageView>(R.id.vintage2).visibility = View.VISIBLE
                         findViewById<ImageView>(R.id.vintageo).visibility = View.VISIBLE
-                        findViewById<ImageView>(R.id.Error).visibility = View.GONE
+                        findViewById<TextView>(R.id.Error).visibility = View.GONE
 
 
 
