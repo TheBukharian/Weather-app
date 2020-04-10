@@ -24,14 +24,10 @@ import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
-    override fun onOptionClick(text: String) {
-
-    }
+    override fun onOptionClick(text: String) {}
 
     val API: String = "263c55c249bef2c72943bbcc77cb742d"
-//    val CITY=intent.getParcelableExtra<Cities>(EXTRA_CITY)
-
-    val CITY:String?="Tashkent,UZ"
+    var CITY:String?="Tashkent,UZ"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,35 +39,27 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
 
-        val image = findViewById<ImageView>(R.id.WeatherImage)as ImageView
+        val image = findViewById<ImageView>(R.id.WeatherImage)
         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud_move)
         val animation2 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fast_rotation)
         val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
         val animation4 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud2)
 
 
-
-
         vintage.startAnimation(animation1)
         vintageo.startAnimation(animation4)
-
-
-
 
         if (WeatherImage.tag == 1){
             image.startAnimation(animation1)
             WeatherImage.setOnClickListener {
                 image.startAnimation(animation1)
-//                    println(CITY.City)
             }
+
         }else {
             image.startAnimation(animation3)
-
-
             WeatherImage.setOnClickListener {
                 image.startAnimation(animation3)
-    Log.d("MainActivity","${WeatherImage.tag}")
-
+                 Log.d("MainActivity","${WeatherImage.tag}")
             }
         }
 
@@ -127,6 +115,8 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
     inner class weatherTask : AsyncTask<String, Void, String>() {
                 override fun onPreExecute() {
                     super.onPreExecute()
+
+
                     /* Showing the ProgressBar, Making the main design GONE */
                     findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
                     findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
@@ -310,8 +300,6 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
     }
 
 
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId){
@@ -336,17 +324,10 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
             }
             R.id.More->{
                 Toast.makeText(this@MainActivity, "Google Play Opened...", Toast.LENGTH_LONG).show()
-
-
             }
-
-
-
         }
 
         return super.onOptionsItemSelected(item)
     }
-
-
         }
 

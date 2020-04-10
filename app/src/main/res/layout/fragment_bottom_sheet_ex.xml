@@ -3,22 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#3BAF6208"
+    android:background="#56AF6208"
     android:padding="5dp"
     android:id="@+id/btmSheet"
     tools:context=".BottomSheetEx">
 
-<HorizontalScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    
-    />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:text="Select Desired Region"
+        android:textSize="22dp"
+        android:textStyle="bold" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:foregroundGravity="center"
+        android:layout_margin="4dp"
+        android:background="?android:attr/listDivider"
+        />
 
+    <SearchView
+        android:id="@+id/btmSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_margin="2dp"
+        android:layout_marginTop="10dp"
+        android:background="#31FFFFFF"
+        />
 
+    <ListView
+        android:id="@+id/btmList"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_margin="2dp"
+        android:background="#31FFFFFF" />
 
-
-    
 
 </LinearLayout>

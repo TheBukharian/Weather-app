@@ -2,79 +2,78 @@ package com.example.weatherapp
 
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBar
-import com.example.weatherapp.MainActivity.weatherTask
-import com.example.weatherapp.Model.Cities
-import com.example.weatherapp.Utility.EXTRA_CITY
-
+import android.widget.ArrayAdapter
+import android.widget.SearchView
+import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.*
-import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.view.*
 
 
 class BottomSheetEx : BottomSheetDialogFragment()  {
+
     private var mBottomSheetListener:BottomSheetListener?=null
 
 
-    var CITY=Cities("Tashkent,UZ")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val v =inflater.inflate(R.layout.fragment_bottom_sheet_ex, container, false)
-        val mainObj= MainActivity()
-
-
-        v.bukhara.setOnClickListener { CITY.City="Bukhara,UZ"
-            Log.d("BottomSheetEx",CITY.City)
-//            v.putExtra(EXTRA_CITY,CITY)
-            println(CITY.City)
-
-        }
-
-        v.samarkand.setOnClickListener {CITY.City="Samarqand,UZ"
-            Log.d("BottomSheetEx",CITY.City)
-            println(CITY.City)
-        }
-
-
-        v.navai.setOnClickListener { CITY.City="Navoiy,UZ"
-            Log.d("BottomSheetEx",CITY.City)
-            println(CITY.City)
-        }
-
-
-        v.london.setOnClickListener { CITY.City="London,GB"
-            Log.d("BottomSheetEx",CITY.City)
-            println(CITY.City)
-        }
-
-
-        v.paris.setOnClickListener { CITY.City="Paris,FR"
-            Log.d("BottomSheetEx",CITY.City)
-            println(CITY.City)
-        }
-
-
-        v.milan.setOnClickListener { CITY.City="Milan,IT"
-            Log.d("BottomSheetEx",CITY.City)
-            println(CITY.City)
-        }
-
-
-
-
-
         return v
+
+
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        val regions= arrayOf("Samarkand,UZ","Bukhara,UZ","London,GB","Paris,FR","Milan,IT","New York City,US","Moscow,RU","Tashkent,UZ","Hong Kong,CH","Navoiy,UZ")
+        val regAdapter: ArrayAdapter<String> =ArrayAdapter(context!!,android.R.layout.simple_list_item_1,regions)
+        btmList.adapter=regAdapter
+
+
+
+
+
+        btmSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                regAdapter.filter.filter(newText)
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+        })
+
+
+        btmList.setOnItemClickListener { parent, view, position, id ->
+            val itemText=parent.getItemAtPosition(position)as String
+            val adr = activity?.findViewById<TextView>(R.id.address)
+
+            if (adr != null) {
+                adr.text=itemText
+            }
+
+
+
+            Toast.makeText(context!!,"$itemText SELECTED",Toast.LENGTH_LONG).show()
+
+        }
+    }
+
+
+
 
     interface BottomSheetListener{
         fun onOptionClick(text:String)
@@ -84,12 +83,12 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
         super.onAttach(context)
         try{
             mBottomSheetListener =context as BottomSheetListener?
+
         }
         catch (e:ClassCastException){
             throw ClassCastException(context!!.toString())
         }
     }
-
 
 
 }
