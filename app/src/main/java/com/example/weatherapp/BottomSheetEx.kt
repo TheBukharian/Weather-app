@@ -63,6 +63,8 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
             val itemText=parent.getItemAtPosition(position)as String
             val adr = activity?.findViewById<TextView>(R.id.address)
 
+
+
             val intent= Intent(context,MainActivity::class.java)
             intent.putExtra(EXTRA_CITY,itemText)
             intent.flags =Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)

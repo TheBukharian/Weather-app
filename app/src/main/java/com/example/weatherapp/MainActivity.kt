@@ -4,6 +4,7 @@ package com.example.weatherapp
 import android.content.Intent
 import android.content.Intent.*
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
 import android.os.Bundle
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
     override fun onOptionClick(text: String) {}
 
     val API: String = "263c55c249bef2c72943bbcc77cb742d"
-    var CITY:String?= EXTRA_CITY
+    var CITY:String?= "Tashkent,UZ"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,15 +43,21 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
         val image = findViewById<ImageView>(R.id.WeatherImage)
 
+        address.text=intent.getStringExtra(EXTRA_CITY)
+        address.paintFlags=address.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud_move)
         val animation2 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fast_rotation)
         val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
         val animation4 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud2)
 
+        weatherTask().execute()
+
 
         vintage.startAnimation(animation1)
         vintageo.startAnimation(animation4)
+        vintage4.startAnimation(animation4)
+
 
         if (WeatherImage.tag == 1){
             image.startAnimation(animation1)
@@ -124,11 +131,20 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                     findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
                     findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
                     findViewById<ImageButton>(R.id.imageButton).visibility = View.GONE
+                    findViewById<ImageView>(R.id.arrow).visibility = View.GONE
+
+
                 }
 
                 override fun doInBackground(vararg params: String?): String? {
                     var response:String?
-                    CITY=intent.getStringExtra(EXTRA_CITY)
+                    var checkCity= intent.getStringExtra(EXTRA_CITY)
+                    if (checkCity!=null){
+                        CITY=intent.getStringExtra(EXTRA_CITY)
+                    }
+                    else{
+                        CITY="Tashkent,UZ"
+                    }
                     try{
                         response = URL("https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=$API").readText(Charsets.UTF_8)
                     }catch (e: Exception){
@@ -174,8 +190,8 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                         findViewById<TextView>(R.id.humidity).text = humidity+"%"
 
 
-                        if(weatherDescription.capitalize()=="Rain"
-                            ||weatherDescription.capitalize()=="Shower rain"||weatherDescription.capitalize()=="Light intensity shower rain")
+                        if(weatherDescription.capitalize()=="Rain"||weatherDescription.capitalize()=="Light rain"||weatherDescription.capitalize()=="Heavy intensity rain"||weatherDescription.capitalize()=="Heavy intensity shower rain"
+                            ||weatherDescription.capitalize()=="Shower rain"||weatherDescription.capitalize()=="Light intensity shower rain"||weatherDescription.capitalize()=="Thunderstorm")
                         {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
                             WeatherImage.setImageResource(R.drawable.rain)
@@ -184,13 +200,13 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
 
 
-                        }else if(weatherDescription.capitalize()=="Snow"){
+                        }else if(weatherDescription.capitalize()=="Snow"||weatherDescription.capitalize()=="Rain and snow"||weatherDescription.capitalize()=="Light shower snow"||weatherDescription.capitalize()=="Shower snow"){
                             mainBack.setBackgroundResource(R.drawable.bg_snow)
                             WeatherImage.setImageResource(R.drawable.snowflake)
                             WeatherImage.tag = R.drawable.snowflake
 
 
-                        }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Broken clouds"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist") {
+                        }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Broken clouds"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist"||weatherDescription.capitalize()=="Few clouds") {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
                             WeatherImage.setImageResource(R.drawable.clouds)
                             WeatherImage.tag = R.drawable.clouds
@@ -200,15 +216,17 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                             mainBack.setBackgroundResource(R.drawable.bg_sun)
                             WeatherImage.tag = 1
                             WeatherImage.setImageResource(R.drawable.sunny)
+                            findViewById<ImageView>(R.id.vintage).visibility = View.GONE
+                            findViewById<ImageView>(R.id.vintage2).visibility = View.GONE
+                            findViewById<ImageView>(R.id.vintageo).visibility = View.GONE
                         }
 
                         /* Views populated, Hiding the loader, Showing the main design */
                         findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
                         findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
-                        findViewById<ImageView>(R.id.vintage).visibility = View.VISIBLE
-                        findViewById<ImageView>(R.id.vintage2).visibility = View.VISIBLE
-                        findViewById<ImageView>(R.id.vintageo).visibility = View.VISIBLE
                         findViewById<TextView>(R.id.Error).visibility = View.GONE
+                        findViewById<ImageView>(R.id.arrow).visibility = View.VISIBLE
+
 
 
 

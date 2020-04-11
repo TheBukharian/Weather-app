@@ -9,6 +9,18 @@
     android:background="@drawable/bg_sun"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="37dp"
+        android:src="@android:drawable/arrow_down_float"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/Error"
         android:layout_width="206dp"
@@ -32,7 +44,6 @@
         android:foregroundGravity="center"
         android:scaleType="fitXY"
         android:tint="#FFFFFF"
-
         android:src="@drawable/vintage0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +61,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <ImageView
+        android:id="@+id/vintage4"
+        android:layout_width="491dp"
+        android:layout_height="310dp"
+        android:layout_marginBottom="570dp"
+        android:foregroundGravity="center"
+        android:scaleType="fitXY"
+        android:src="@drawable/vintage2"
+        android:rotation="180"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/vintageo2"
+        android:layout_width="491dp"
+        android:layout_height="310dp"
+        android:layout_marginBottom="570dp"
+        android:foregroundGravity="center"
+        android:scaleType="fitXY"
+        android:tint="#FFFFFF"
+        android:src="@drawable/vintage0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/vintage2"
         android:layout_width="match_parent"
@@ -83,7 +119,6 @@
                 android:id="@+id/addressContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/address"
                 android:clickable="true"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -101,8 +136,8 @@
                     android:layout_height="wrap_content"
                     android:text="Check an updated info"
                     android:textSize="14dp"
-
                     />
+
 
             </LinearLayout>
 
@@ -111,11 +146,10 @@
                 android:id="@+id/overviewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/detailsContainer"
 
+                android:layout_above="@+id/bb"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="50dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -125,7 +159,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="45dp"
                     android:fontFamily="sans-serif-thin"
-                    android:text="29°C"
+                    android:text="11°C"
                     android:textSize="90dp" />
 
                 <TextView
@@ -147,6 +181,28 @@
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bb"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_above="@+id/detailsContainer"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="11dp">
+
+                <ImageButton
+                    android:id="@+id/weatherUpdateBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/update_btn"
+                    android:src="@android:drawable/stat_notify_sync"
+                    />
 
             </LinearLayout>
 
@@ -402,14 +458,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/weatherUpdateBtn"
-                android:layout_width="43dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="320dp"
-                android:layout_marginTop="458dp"
-                android:background="@drawable/update_btn"
-                android:drawableStart="@android:drawable/stat_notify_sync" />
+
 
             <LinearLayout
                 android:layout_width="381dp"
@@ -427,6 +476,7 @@
                     android:layout_width="300dp"
                     android:layout_height="150dp"
                     android:layout_weight="1"
+                    android:layout_marginTop="20dp"
                     android:clickable="true"
                     android:tint="#56FFFFFF"
                     app:srcCompat="@drawable/sunny" />
