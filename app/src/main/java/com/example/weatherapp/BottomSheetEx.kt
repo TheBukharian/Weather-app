@@ -38,7 +38,7 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val regions= arrayOf("Samarkand,UZ","Bukhara,UZ","London,GB","Paris,FR","Milan,IT","New York City,US","Moscow,RU","Tashkent,UZ","Hong Kong,CH","Navoiy,UZ")
+        val regions= arrayOf("Samarkand,UZ","Bukhara,UZ","London,GB","Paris,FR","Milan,IT","New York City,US","Moscow,RU","Tashkent,UZ","Hong Kong,HK","Navoiy,UZ")
         val regAdapter: ArrayAdapter<String> =ArrayAdapter(context!!,android.R.layout.simple_list_item_1,regions)
         btmList.adapter=regAdapter
 

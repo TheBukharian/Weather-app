@@ -51,12 +51,10 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
         val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
         val animation4 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud2)
 
-        weatherTask().execute()
 
-
-        vintage.startAnimation(animation1)
-        vintageo.startAnimation(animation4)
         vintage4.startAnimation(animation4)
+
+        weatherTask().execute()
 
 
         if (WeatherImage.tag == 1){
@@ -188,6 +186,9 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                         findViewById<TextView>(R.id.wind).text = windSpeed+"km/h"
                         findViewById<TextView>(R.id.pressure).text = pressure
                         findViewById<TextView>(R.id.humidity).text = humidity+"%"
+                        val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud_move)
+                        val animation4 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud2)
+
 
 
                         if(weatherDescription.capitalize()=="Rain"||weatherDescription.capitalize()=="Light rain"||weatherDescription.capitalize()=="Heavy intensity rain"||weatherDescription.capitalize()=="Heavy intensity shower rain"
@@ -196,6 +197,9 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
                             WeatherImage.setImageResource(R.drawable.rain)
                             WeatherImage.tag = R.drawable.rain
+                            vintage.startAnimation(animation1)
+                            vintageo.startAnimation(animation4)
+
 
 
 
@@ -204,15 +208,19 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                             mainBack.setBackgroundResource(R.drawable.bg_snow)
                             WeatherImage.setImageResource(R.drawable.snowflake)
                             WeatherImage.tag = R.drawable.snowflake
+                            vintage.startAnimation(animation1)
+                            vintageo.startAnimation(animation4)
 
 
-                        }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Broken clouds"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist"||weatherDescription.capitalize()=="Few clouds") {
+                        }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Broken clouds"||weatherDescription.capitalize()=="Overcast clouds"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist"||weatherDescription.capitalize()=="Few clouds") {
                             mainBack.setBackgroundResource(R.drawable.bg_rain)
                             WeatherImage.setImageResource(R.drawable.clouds)
                             WeatherImage.tag = R.drawable.clouds
+                            vintage.startAnimation(animation1)
+                            vintageo.startAnimation(animation4)
 
 
-                        }else if (weatherDescription.capitalize()=="Overcast clouds"||weatherDescription.capitalize()=="Clear sky"){
+                        }else if (weatherDescription.capitalize()=="Clear sky"){
                             mainBack.setBackgroundResource(R.drawable.bg_sun)
                             WeatherImage.tag = 1
                             WeatherImage.setImageResource(R.drawable.sunny)
