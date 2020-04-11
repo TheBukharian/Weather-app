@@ -15,6 +15,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.weatherapp.Utility.EXTRA_CITY
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
     override fun onOptionClick(text: String) {}
 
     val API: String = "263c55c249bef2c72943bbcc77cb742d"
-    var CITY:String?="Tashkent,UZ"
+    var CITY:String?= EXTRA_CITY
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +41,8 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
 
         val image = findViewById<ImageView>(R.id.WeatherImage)
+
+
         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud_move)
         val animation2 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fast_rotation)
         val animation3 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fade_in)
@@ -125,6 +128,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
                 override fun doInBackground(vararg params: String?): String? {
                     var response:String?
+                    CITY=intent.getStringExtra(EXTRA_CITY)
                     try{
                         response = URL("https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=$API").readText(Charsets.UTF_8)
                     }catch (e: Exception){

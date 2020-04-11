@@ -2,6 +2,7 @@ package com.example.weatherapp
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.weatherapp.Utility.EXTRA_CITY
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -61,13 +63,19 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
             val itemText=parent.getItemAtPosition(position)as String
             val adr = activity?.findViewById<TextView>(R.id.address)
 
+            val intent= Intent(context,MainActivity::class.java)
+            intent.putExtra(EXTRA_CITY,itemText)
+            intent.flags =Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+
             if (adr != null) {
                 adr.text=itemText
             }
 
 
 
-            Toast.makeText(context!!,"$itemText SELECTED",Toast.LENGTH_LONG).show()
+
+            Toast.makeText(context!!,"${adr?.text} SELECTED",Toast.LENGTH_LONG).show()
 
         }
     }
