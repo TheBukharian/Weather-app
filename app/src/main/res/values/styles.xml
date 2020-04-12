@@ -6,7 +6,8 @@
         <item name="colorPrimary">#77EBB34D</item>
         <item name="colorPrimaryDark">#75CE931C</item>
         <item name="colorAccent">#752B2B2B</item>
-        <item name="android:forceDarkAllowed">true</item>
+        <item name="android:forceDarkAllowed">false</item>
+
     </style>
 
 
