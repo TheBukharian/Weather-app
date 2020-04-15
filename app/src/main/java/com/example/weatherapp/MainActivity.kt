@@ -22,6 +22,7 @@ import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
 
@@ -162,7 +163,9 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                         val weather = jsonObj.getJSONArray("weather").getJSONObject(0)
                         val updatedAt:Long = jsonObj.getLong("dt")
                         val updatedAtText = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(updatedAt*1000))
-                        val temp = main.getString("temp")+"°C"
+                        val temp = main.getString("temp")
+                        val tempInt= temp.toDouble()
+                        val partTemp=tempInt.roundToInt()
                         val pressure = main.getString("pressure")
                         val humidity = main.getString("humidity")
                         val sunrise:Long = sys.getLong("sunrise")
@@ -176,11 +179,10 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
 
 
-                        /* Populating extracted data into our views */
                         findViewById<TextView>(R.id.address).text = address
                         findViewById<TextView>(R.id.updated_at).text =  updatedAtText
                         findViewById<TextView>(R.id.status).text = weatherDescription.capitalize()
-                        findViewById<TextView>(R.id.temp).text = temp
+                        findViewById<TextView>(R.id.temp).text = partTemp.toString()+"°C"
                         findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise*1000))
                         findViewById<TextView>(R.id.sunset).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset*1000))
                         findViewById<TextView>(R.id.wind).text = windSpeed+"km/h"
@@ -229,8 +231,7 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                             findViewById<ImageView>(R.id.vintageo).visibility = View.GONE
                         }
 
-                        /* Views populated, Hiding the loader, Showing the main design */
-                        findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
+                         findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
                         findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
                         findViewById<TextView>(R.id.Error).visibility = View.GONE
                         findViewById<ImageView>(R.id.arrow).visibility = View.VISIBLE
