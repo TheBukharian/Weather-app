@@ -1,2 +1,2 @@
 # Weather-app
-Be informed of the weather by this application written in #Kotlin 
+Be informed of the weather in this application written in #Kotlin 
