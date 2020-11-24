@@ -89,14 +89,14 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
         fun onOptionClick(text:String)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try{
             mBottomSheetListener =context as BottomSheetListener?
 
         }
         catch (e:ClassCastException){
-            throw ClassCastException(context!!.toString())
+            throw ClassCastException(context.toString())
         }
     }
 
