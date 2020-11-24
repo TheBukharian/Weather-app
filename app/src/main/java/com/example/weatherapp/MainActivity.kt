@@ -22,6 +22,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
@@ -131,14 +133,24 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
        else{
            CITY="Tashkent,UZ"
        }
+
+
+       val client=OkHttpClient.Builder().apply {
+           addInterceptor(Interceptor { chain ->
+               val builder=chain.request().newBuilder()
+               builder.header("appid","fa867fd33057788a3ff8163c9bcbce3c")
+               builder.header("units","metric")
+               return@Interceptor chain.proceed(builder.build())
+           })
+       }
        val api = Retrofit.Builder()
             .baseUrl("https://api.openweathermap.org")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create()).client(client.build())
             .build()
             .create(RequestAPI::class.java)
 
        GlobalScope.launch(Dispatchers.IO){
-           val response = api.getCurrentWeather("/data/2.5/weather?q=${CITY}&units=metric&appid=fa867fd33057788a3ff8163c9bcbce3c").awaitResponse()
+           val response = api.getCurrentWeather("/data/2.5/weather",CITY).awaitResponse()
 
                 if (response.isSuccessful){
                     val data = response.body()!!
