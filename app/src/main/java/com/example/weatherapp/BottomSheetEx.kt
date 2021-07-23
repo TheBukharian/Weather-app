@@ -11,11 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
-import com.example.weatherapp.Utility.EXTRA_CITY
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_bottom_sheet_ex.*
 
 
 class BottomSheetEx : BottomSheetDialogFragment()  {
@@ -38,8 +34,25 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val regions= arrayOf("Samarkand,UZ","Bukhara,UZ","London,GB","Paris,FR","Milan,IT","New York City,US","Moscow,RU","Tashkent,UZ","Hong Kong,HK","Navoiy,UZ")
-        val regAdapter: ArrayAdapter<String> =ArrayAdapter(context!!,android.R.layout.simple_list_item_1,regions)
+        val regions= arrayOf(
+            "Samarkand,UZ",
+            "Bukhara,UZ",
+            "London,GB",
+            "Paris,FR",
+            "Milan,IT",
+            "New York City,US",
+            "Moscow,RU",
+            "Tashkent,UZ",
+            "Hong Kong,HK",
+            "Navoiy,UZ")
+
+
+        val regAdapter: ArrayAdapter<String> =
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_list_item_1,
+                regions)
+
         btmList.adapter=regAdapter
 
 
@@ -59,7 +72,7 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
         })
 
 
-        btmList.setOnItemClickListener { parent, view, position, id ->
+        btmList.setOnItemClickListener { parent, _, position, id ->
             val itemText=parent.getItemAtPosition(position)as String
             val adr = activity?.findViewById<TextView>(R.id.address)
 
@@ -77,7 +90,7 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
 
 
 
-            Toast.makeText(context!!,"${adr?.text} SELECTED",Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(),"${adr?.text} SELECTED",Toast.LENGTH_LONG).show()
 
         }
     }
@@ -89,16 +102,18 @@ class BottomSheetEx : BottomSheetDialogFragment()  {
         fun onOptionClick(text:String)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try{
             mBottomSheetListener =context as BottomSheetListener?
 
         }
         catch (e:ClassCastException){
-            throw ClassCastException(context!!.toString())
+            throw ClassCastException(requireContext().toString())
         }
     }
+
+
 
 
 }

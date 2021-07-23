@@ -16,21 +16,28 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.weatherapp.Utility.EXTRA_CITY
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.weatherapp.databinding.ActivityMainBinding
+import com.example.weatherapp.mvvm.utilities.AppDataStore
+import com.example.weatherapp.mvvm.utilities.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
-    override fun onOptionClick(text: String) {}
 
-    val API: String = "263c55c249bef2c72943bbcc77cb742d"
-    var CITY:String?= "Tashkent,UZ"
+    @Inject
+    lateinit var appDataStore: AppDataStore
+
+
+    private lateinit var binding: ActivityMainBinding
+    lateinit var City: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +51,8 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
         val image = findViewById<ImageView>(R.id.WeatherImage)
 
-        address.text=intent.getStringExtra(EXTRA_CITY)
-        address.paintFlags=address.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        binding.address.text = intent.getStringExtra("EXTRA_CITY")
+        binding.address.paintFlags = binding.address.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud_move)
         val animation2 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.fast_rotation)
@@ -53,61 +60,61 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
         val animation4 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud2)
 
 
-        vintage4.startAnimation(animation4)
+        binding.vintage4.startAnimation(animation4)
 
         weatherTask().execute()
 
 
-        if (WeatherImage.tag == 1){
+        if (binding.WeatherImage.tag == 1){
             image.startAnimation(animation1)
-            WeatherImage.setOnClickListener {
+            binding.WeatherImage.setOnClickListener {
                 image.startAnimation(animation1)
             }
 
         }else {
             image.startAnimation(animation3)
-            WeatherImage.setOnClickListener {
+            binding.WeatherImage.setOnClickListener {
                 image.startAnimation(animation3)
-                 Log.d("MainActivity","${WeatherImage.tag}")
+                 Log.d("MainActivity","${binding.WeatherImage.tag}")
             }
         }
 
 
-        box1.setOnClickListener {
-            box1.startAnimation(animation2)
+        binding.box1.setOnClickListener {
+            binding.box1.startAnimation(animation2)
         }
-        box2.setOnClickListener {
-            box2.startAnimation(animation2)
+        binding.box2.setOnClickListener {
+            binding.box2.startAnimation(animation2)
         }
-        box3.setOnClickListener {
-            box3.startAnimation(animation2)
+        binding.box3.setOnClickListener {
+            binding.box3.startAnimation(animation2)
         }
-        box4.setOnClickListener {
-            box4.startAnimation(animation2)
+        binding.box4.setOnClickListener {
+            binding.box4.startAnimation(animation2)
         }
-        box5.setOnClickListener {
-            box5.startAnimation(animation2)
+        binding.box5.setOnClickListener {
+            binding.box5.startAnimation(animation2)
         }
-        infoWeather.setOnClickListener {
-            infoWeather.startAnimation(animation2)
+        binding.infoWeather.setOnClickListener {
+            binding.infoWeather.startAnimation(animation2)
         }
 
-        weatherUpdateBtn.setOnClickListener {
+        binding.weatherUpdateBtn.setOnClickListener {
             weatherTask().execute()
 
 
         }
-        imageButton.setOnClickListener {
+        binding.imageButton.setOnClickListener {
             weatherTask().execute()
 
         }
-        addressContainer.setOnClickListener {
+        binding.addressContainer.setOnClickListener {
 
             val bottomSheet=BottomSheetEx()
             bottomSheet.show(supportFragmentManager,"BottomSheetEx")
         }
 
-        infoWeather.setOnClickListener {
+        binding.infoWeather.setOnClickListener {
             val intent=Intent(this,WebPage::class.java)
             startActivity(intent)
         }
@@ -137,15 +144,15 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
                 override fun doInBackground(vararg params: String?): String? {
                     var response:String?
-                    var checkCity= intent.getStringExtra(EXTRA_CITY)
-                    if (checkCity!=null){
-                        CITY=intent.getStringExtra(EXTRA_CITY)
+                    val checkCity= intent.getStringExtra("EXTRA_CITY")
+                    if (checkCity != null){
+                        City = checkCity
                     }
                     else{
-                        CITY="Tashkent,UZ"
+                        City = Constants.CITY
                     }
                     try{
-                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=$API").readText(Charsets.UTF_8)
+                        response = URL("https://api.openweathermap.org/data/2.5/weather?q=${City}&units=metric&appid=${appDataStore.getAPI()}").readText(Charsets.UTF_8)
                     }catch (e: Exception){
                         response = null
                     }
@@ -182,12 +189,12 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                         findViewById<TextView>(R.id.address).text = address
                         findViewById<TextView>(R.id.updated_at).text =  updatedAtText
                         findViewById<TextView>(R.id.status).text = weatherDescription.capitalize()
-                        findViewById<TextView>(R.id.temp).text = partTemp.toString()+"°C"
+                        findViewById<TextView>(R.id.temp).text = "$partTemp°C"
                         findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise*1000))
                         findViewById<TextView>(R.id.sunset).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset*1000))
                         findViewById<TextView>(R.id.wind).text = windSpeed+"km/h"
                         findViewById<TextView>(R.id.pressure).text = pressure
-                        findViewById<TextView>(R.id.humidity).text = humidity+"%"
+                        findViewById<TextView>(R.id.humidity).text = "$humidity%"
                         val animation1 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud_move)
                         val animation4 : Animation=AnimationUtils.loadAnimation(this@MainActivity,R.anim.cloud2)
 
@@ -196,56 +203,63 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
                         if(weatherDescription.capitalize()=="Rain"||weatherDescription.capitalize()=="Light rain"||weatherDescription.capitalize()=="Heavy intensity rain"||weatherDescription.capitalize()=="Heavy intensity shower rain"
                             ||weatherDescription.capitalize()=="Shower rain"||weatherDescription.capitalize()=="Light intensity shower rain"||weatherDescription.capitalize()=="Thunderstorm")
                         {
-                            mainBack.setBackgroundResource(R.drawable.bg_rain)
-                            WeatherImage.setImageResource(R.drawable.rain)
-                            WeatherImage.tag = R.drawable.rain
-                            vintage.startAnimation(animation1)
-                            vintageo.startAnimation(animation4)
+                            binding.mainBack.setBackgroundResource(R.drawable.bg_rain)
+                            binding.WeatherImage.setImageResource(R.drawable.rain)
+                            binding.WeatherImage.tag = R.drawable.rain
+                            binding.vintage.startAnimation(animation1)
+                            binding.vintageo.startAnimation(animation4)
 
 
 
 
 
                         }else if(weatherDescription.capitalize()=="Snow"||weatherDescription.capitalize()=="Rain and snow"||weatherDescription.capitalize()=="Light shower snow"||weatherDescription.capitalize()=="Shower snow"){
-                            mainBack.setBackgroundResource(R.drawable.bg_snow)
-                            WeatherImage.setImageResource(R.drawable.snowflake)
-                            WeatherImage.tag = R.drawable.snowflake
-                            vintage.startAnimation(animation1)
-                            vintageo.startAnimation(animation4)
+                           binding.apply {
+                               mainBack.setBackgroundResource(R.drawable.bg_snow)
+                               WeatherImage.setImageResource(R.drawable.snowflake)
+                               WeatherImage.tag = R.drawable.snowflake
+                               vintage.startAnimation(animation1)
+                               vintageo.startAnimation(animation4)
+                           }
 
 
                         }else if(weatherDescription.capitalize()=="Smoke"||weatherDescription.capitalize()=="Broken clouds"||weatherDescription.capitalize()=="Overcast clouds"||weatherDescription.capitalize()=="Scattered clouds"||weatherDescription.capitalize()=="Mist"||weatherDescription.capitalize()=="Few clouds") {
-                            mainBack.setBackgroundResource(R.drawable.bg_rain)
-                            WeatherImage.setImageResource(R.drawable.clouds)
-                            WeatherImage.tag = R.drawable.clouds
-                            vintage.startAnimation(animation1)
-                            vintageo.startAnimation(animation4)
+                            binding.apply {
+                                mainBack.setBackgroundResource(R.drawable.bg_rain)
+                                WeatherImage.setImageResource(R.drawable.clouds)
+                                WeatherImage.tag = R.drawable.clouds
+                                vintage.startAnimation(animation1)
+                                vintageo.startAnimation(animation4)
+                            }
 
 
                         }else if (weatherDescription.capitalize()=="Clear sky"){
-                            mainBack.setBackgroundResource(R.drawable.bg_sun)
-                            WeatherImage.tag = 1
-                            WeatherImage.setImageResource(R.drawable.sunny)
-                            findViewById<ImageView>(R.id.vintage).visibility = View.GONE
-                            findViewById<ImageView>(R.id.vintage2).visibility = View.GONE
-                            findViewById<ImageView>(R.id.vintageo).visibility = View.GONE
+                            binding.apply {
+                                mainBack.setBackgroundResource(R.drawable.bg_sun)
+                                WeatherImage.tag = 1
+                                WeatherImage.setImageResource(R.drawable.sunny)
+                                vintage.visibility = View.GONE
+                                vintage2.visibility = View.GONE
+                                vintageo.visibility = View.GONE
+                            }
                         }
 
-                         findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
-                        findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.Error).visibility = View.GONE
-                        findViewById<ImageView>(R.id.arrow).visibility = View.VISIBLE
-
+                        binding.apply {
+                            loader.visibility = View.GONE
+                            mainContainer.visibility = View.VISIBLE
+                            Error.visibility = View.GONE
+                            arrow.visibility = View.VISIBLE
+                        }
 
 
 
                     } catch (e: Exception) {
-                        findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
-                        findViewById<ImageButton>(R.id.imageButton).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.Error).visibility = View.VISIBLE
-
+                        binding.apply {
+                            loader.visibility = View.GONE
+                            imageButton.visibility = View.VISIBLE
+                            Error.visibility = View.VISIBLE
+                        }
                     }
-
                 }
             }
 
@@ -255,75 +269,80 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
         val item = menu!!.findItem(R.id.switcher)
         item.setActionView(R.layout.switch_layout)
         val mySwitch = item.actionView.findViewById<Switch>(R.id.switchForActionBar)
-        mySwitch.setOnCheckedChangeListener { p0, isChecked ->
-            if (mySwitch.isChecked) {
-                Toast.makeText(this@MainActivity, "Dark Mode", Toast.LENGTH_LONG).show()
+        binding.apply {
+            mySwitch.setOnCheckedChangeListener { p0, isChecked ->
+
+                if (mySwitch.isChecked) {
+                    Toast.makeText(this@MainActivity, "Dark Mode", Toast.LENGTH_LONG).show()
 
 
-                supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorAccent)))
-                box1.setBackgroundColor(Color.parseColor("#3C242424"))
-                box2.setBackgroundColor(Color.parseColor("#3C242424"))
-                box3.setBackgroundColor(Color.parseColor("#3C242424"))
-                box4.setBackgroundColor(Color.parseColor("#3C242424"))
-                box5.setBackgroundColor(Color.parseColor("#3C242424"))
-                infoWeather.setBackgroundColor(Color.parseColor("#86242424"))
-                mainBack.setBackgroundResource(R.drawable.dark_theme)
-                if(status.text=="Rain"
-                    ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
-                {
-                    WeatherImage.setImageResource(R.drawable.rain)
+                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorAccent)))
 
-
-
-
-                }else if(status.text=="Snow"){
-                    WeatherImage.setImageResource(R.drawable.snowflake)
-
-
-                }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
-                    WeatherImage.setImageResource(R.drawable.clouds)
-
-
-                }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
-                    WeatherImage.setImageResource(R.drawable.sunny)
-                }
-
-            } else {
-                Toast.makeText(this@MainActivity, "Light Mode", Toast.LENGTH_LONG).show()
-
-                supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorPrimaryDark)))
-                box1.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
-                box2.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
-                box3.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
-                box4.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
-                box5.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
-                infoWeather.setBackgroundColor(Color.parseColor("#83FDFDFD"))
-                mainBack.setBackgroundResource(R.drawable.bg_sun)
-                if(status.text=="Rain"
-                    ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
-                {
-                    mainBack.setBackgroundResource(R.drawable.bg_rain)
-                    WeatherImage.setImageResource(R.drawable.rain)
+                    box1.setBackgroundColor(Color.parseColor("#3C242424"))
+                    box2.setBackgroundColor(Color.parseColor("#3C242424"))
+                    box3.setBackgroundColor(Color.parseColor("#3C242424"))
+                    box4.setBackgroundColor(Color.parseColor("#3C242424"))
+                    box5.setBackgroundColor(Color.parseColor("#3C242424"))
+                    infoWeather.setBackgroundColor(Color.parseColor("#86242424"))
+                    mainBack.setBackgroundResource(R.drawable.dark_theme)
+                    if(status.text=="Rain"
+                        ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
+                    {
+                        WeatherImage.setImageResource(R.drawable.rain)
 
 
 
 
-                }else if(status.text=="Snow"){
-                    mainBack.setBackgroundResource(R.drawable.bg_snow)
-                    WeatherImage.setImageResource(R.drawable.snowflake)
+                    }else if(status.text=="Snow"){
+                        WeatherImage.setImageResource(R.drawable.snowflake)
 
 
-                }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
-                    mainBack.setBackgroundResource(R.drawable.bg_rain)
-                    WeatherImage.setImageResource(R.drawable.clouds)
+                    }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
+                        WeatherImage.setImageResource(R.drawable.clouds)
 
 
-                }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
+                    }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
+                        WeatherImage.setImageResource(R.drawable.sunny)
+                    }
+
+                } else {
+                    Toast.makeText(this@MainActivity, "Light Mode", Toast.LENGTH_LONG).show()
+
+                    supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorPrimaryDark)))
+                    box1.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                    box2.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                    box3.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                    box4.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                    box5.setBackgroundColor(Color.parseColor("#3CF1EBF1"))
+                    infoWeather.setBackgroundColor(Color.parseColor("#83FDFDFD"))
                     mainBack.setBackgroundResource(R.drawable.bg_sun)
-                    WeatherImage.setImageResource(R.drawable.sunny)
+                    if(status.text=="Rain"
+                        ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
+                    {
+                        mainBack.setBackgroundResource(R.drawable.bg_rain)
+                        WeatherImage.setImageResource(R.drawable.rain)
+
+
+
+
+                    }else if(status.text=="Snow"){
+                        mainBack.setBackgroundResource(R.drawable.bg_snow)
+                        WeatherImage.setImageResource(R.drawable.snowflake)
+
+
+                    }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
+                        mainBack.setBackgroundResource(R.drawable.bg_rain)
+                        WeatherImage.setImageResource(R.drawable.clouds)
+
+
+                    }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
+                        mainBack.setBackgroundResource(R.drawable.bg_sun)
+                        WeatherImage.setImageResource(R.drawable.sunny)
+                    }
                 }
             }
-        }
+
+                }
 
 
         return super.onCreateOptionsMenu(menu)
@@ -360,5 +379,10 @@ class MainActivity : AppCompatActivity(), BottomSheetEx.BottomSheetListener{
 
         return super.onOptionsItemSelected(item)
     }
-        }
+
+    override fun onOptionClick(text: String) {}
+
+
+
+}
 
