@@ -10,8 +10,9 @@ interface WeatherDao {
     suspend fun insert(weather: WeatherData)
 
     @Query("SELECT * FROM weather_table WHERE country_id = :countryId")
-    suspend fun getWeatherById(countryId: Int): WeatherData
+    suspend fun getWeatherById(countryId: Int): WeatherData?
 
     @Update
     suspend fun updateWeather(countryData: WeatherData)
+
 }

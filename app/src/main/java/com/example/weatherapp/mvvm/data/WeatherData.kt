@@ -22,9 +22,10 @@ data class WeatherData(
     val sunset: Int,
     val type: Int,
     val description: String,
-    val main: String,
     val wind_speed: Double,
-    val wind_deg: Int
+    val wind_deg: Int,
+    val date: String,
+    val city: String
 
 
 )

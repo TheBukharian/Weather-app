@@ -3,6 +3,7 @@ package com.example.weatherapp.mvvm.utilities
 import android.content.Context
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
@@ -65,6 +66,43 @@ class AppDataStore @Inject constructor(context: Context) {
         return value
     }
 
+    fun setSelectedCity(city: String) = runBlocking{
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.CITY] = city
+        }
+    }
+
+    fun getSelectedCity(): String {
+        var value = "Tashkent,UZ"
+        runBlocking {
+            dataStore.data.first {
+                value = it[PreferenceKeys.CITY] ?: "Tashkent,UZ"
+                true
+            }
+        }
+
+        return value
+    }
+
+    fun setLatestCountry(id: Int) = runBlocking{
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.CITY_ID] = id
+        }
+    }
+
+    fun getLatestCountry(): Int {
+        var value = 0
+        runBlocking {
+            dataStore.data.first {
+                value = it[PreferenceKeys.CITY_ID] ?: 0
+                true
+            }
+        }
+
+        return value
+    }
+
+
 
 
 
@@ -78,9 +116,9 @@ class AppDataStore @Inject constructor(context: Context) {
     private object PreferenceKeys {
 //        val LOCATION_TITLE = stringPreferencesKey(Constants.LOCATION_TITLE)
 //        val PREFIX = stringPreferencesKey(Constants.PREFIX)
-//        val SETTINGSALLOW = booleanPreferencesKey(Constants.SETTINGS_ALLOW)
-//
-//        val CAMERA_ID = booleanPreferencesKey(Constants.CAMERA_ID)
+        val CITY_ID = intPreferencesKey(Constants.CITY_ID)
+
+        val CITY = stringPreferencesKey(Constants.CITY_KEY)
         val LANG_ID = stringPreferencesKey(Constants.LANGUAGE)
         val API = stringPreferencesKey(Constants.WEATHER_API)
     }

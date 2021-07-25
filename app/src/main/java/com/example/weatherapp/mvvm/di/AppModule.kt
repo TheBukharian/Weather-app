@@ -2,7 +2,7 @@ package com.example.weatherapp.mvvm.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.weatherapp.MainActivity
+import com.example.weatherapp.mvvm.view.activities.MainActivity
 import com.example.weatherapp.mvvm.utilities.AppDataStore
 import com.example.weatherapp.mvvm.db.WeatherDatabase
 import com.example.weatherapp.mvvm.net.AppRetrofitService

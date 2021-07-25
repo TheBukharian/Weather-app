@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WebPage"
+    tools:context=".mvvm.view.activities.WebPageActivity"
     android:backgroundTint="#7900A9EC">
 
     <TextView

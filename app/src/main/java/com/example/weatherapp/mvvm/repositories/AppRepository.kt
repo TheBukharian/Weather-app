@@ -1,6 +1,8 @@
 package com.example.weatherapp.mvvm.repositories
 
-import com.example.weatherapp.MainActivity
+import android.util.Log
+import androidx.lifecycle.liveData
+import com.example.weatherapp.mvvm.view.activities.MainActivity
 import com.example.weatherapp.mvvm.base.BaseDataSource
 import com.example.weatherapp.mvvm.base.Resource
 import com.example.weatherapp.mvvm.data.WeatherData
@@ -9,6 +11,7 @@ import com.example.weatherapp.mvvm.db.WeatherDatabase
 import com.example.weatherapp.mvvm.net.AppRetrofitService
 import com.example.weatherapp.mvvm.utilities.Constants
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
@@ -34,8 +37,18 @@ class AppRepository @Inject constructor(
         appDatabase.weatherDao().updateWeather(weatherData)
     }
 
-    suspend fun selectWeatherFromDb(countryId: Int): WeatherData =
-        appDatabase.weatherDao().getWeatherById(countryId)
+     fun selectWeatherFromDb(countryId: Int) = flow {
+         emit(appDatabase.weatherDao().getWeatherById(countryId))
+     }.flowOn(Dispatchers.IO)
+
+    fun setLatestCountryID(id:Int){
+        appDataStore.setLatestCountry(id)
+    }
+
+    fun getLatestCountryID(): Int {
+        return appDataStore.getLatestCountry()
+    }
+
 
     suspend fun requestWeather(mode: Int) = flow {
 
@@ -53,24 +66,29 @@ class AppRepository @Inject constructor(
 
             2-> {
                 //todo by country Name
-                params["q"] = "Tashkent,UZ"
+                appDataStore.getSelectedCity().let { city ->
+                     params["q"] = city
+                }
             }
 
         }
 
         appDataStore.getSelectedLanguage().let {
             if (it.isNotEmpty() && Constants.SUPPORTED_LANGUAGES.contains(it)){
-            params["lang"] = appDataStore.getSelectedLanguage()
+            params["lang"] = it
         }
         }
 
         emit(getResult {
-            appService.requestWeatherData(params)
+            appService.requestWeatherDataAsync(params)
         })
 
     }.onStart {
         Resource.loading(null)
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.IO).catch {
+        Log.d("ekoko", "message error: $it")
+    }
+
 
 
 

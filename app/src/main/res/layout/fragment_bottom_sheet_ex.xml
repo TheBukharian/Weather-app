@@ -8,7 +8,7 @@
     android:background="#56AF6208"
     android:padding="5dp"
     android:id="@+id/btmSheet"
-    tools:context=".BottomSheetEx">
+    tools:context=".mvvm.view.fragments.BottomSheetExFragment">
 
     <TextView
         android:layout_width="match_parent"

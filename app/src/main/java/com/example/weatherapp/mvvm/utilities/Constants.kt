@@ -3,6 +3,10 @@ package com.example.weatherapp.mvvm.utilities
 object Constants {
 
     const val CITY = "Tashkent,UZ"
+    const val CITY_KEY = "CITY_key"
+    const val CITY_ID = "CITY_id"
+
+
     const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
     const val BASE_URL = "api.openweathermap.org"
     const val WEATHER_DATASTORE = "weather_datastore"

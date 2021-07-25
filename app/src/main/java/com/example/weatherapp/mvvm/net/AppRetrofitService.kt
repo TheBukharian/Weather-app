@@ -1,17 +1,19 @@
 package com.example.weatherapp.mvvm.net
 
 import com.example.weatherapp.mvvm.data.WeatherResult
+import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
+import retrofit2.http.QueryMap
 
+@JvmSuppressWildcards
 interface AppRetrofitService {
 
-    @FormUrlEncoded
     @POST("data/2.5/weather")
-    suspend fun requestWeatherData(
-        @FieldMap params: Map<String, Any>
+    suspend fun requestWeatherDataAsync(
+        @QueryMap params: Map<String, Any>
     ): Response<WeatherResult>
 
 }

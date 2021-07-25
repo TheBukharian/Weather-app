@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:gravity="center"
         android:id="@+id/switchForActionBar"
         android:layout_width="wrap_content"
