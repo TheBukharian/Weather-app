@@ -59,6 +59,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,7 +79,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
         binding.vintage4.startAnimation(animation4)
 
 
-//        setupEverything()
+        setupEverything()
 
         if (binding.WeatherImage.tag == 1){
             image.startAnimation(animation1)
@@ -134,18 +135,16 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
     }
 
+    @ExperimentalCoroutinesApi
     private fun requestWeather(mode: Int) = CoroutineScope(Dispatchers.Main + weatherJob).launch{
-        Log.d("ekoko", "before---")
 
         mainViewModel.requestWeather(mode).collectLatest {
-            Log.d("ekoko", "center---")
 
             if (it != null){
 
                 when(it.status){
                     Resource.Status.SUCCESS -> {
                         if (it.data != null){
-                            Log.d("ekoko", "after---")
 
 
                             it.data.let { response ->
@@ -165,7 +164,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                                         sunrise = response.sys.sunrise,
                                         sunset = response.sys.sunset,
                                         type = response.sys.type,
-                                        description = response.weather.last().description,
+                                        description = response.weather.last().description.capitalize(),
                                         wind_speed = response.wind.speed,
                                         wind_deg = response.wind.deg,
                                         date = response.dt.toString(),
@@ -210,13 +209,15 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
     private fun updateUi(weather: WeatherData){
         binding.apply {
 
-            val date = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm a")
-                .parseDateTime(weather.date)
-            val sunriseTime = DateTimeFormat.forPattern("hh:mm a")
-                .parseDateTime(weather.sunrise.toString())
-            val sunsetTime = DateTimeFormat.forPattern("hh:mm a")
-                .parseDateTime(weather.sunset.toString())
-            val tempNum = weather.temp.roundToInt()
+            val date = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(weather.date.toLong() * 1000))
+
+            val sunriseTime = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(weather.sunrise.toLong() * 1000))
+
+            val sunsetTime = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(weather.sunset.toLong() * 1000))
+
+            //Converting kelvin to celsius is easy: Just subtract 273.15
+            val tempNum = (weather.temp - 273.15).roundToInt()
+
 
             address.text = "${weather.city},${weather.country}"
             updatedAt.text = "Updated at: $date"
@@ -239,8 +240,8 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
         weather.description.let {
 
-            if(it.capitalize()=="Rain"||it.capitalize()=="Light rain"||it.capitalize()=="Heavy intensity rain"||it.capitalize()=="Heavy intensity shower rain"
-                ||it.capitalize()=="Shower rain"||it.capitalize()=="Light intensity shower rain"||it.capitalize()=="Thunderstorm")
+            if(it=="Rain"||it=="Light rain"||it=="Heavy intensity rain"||it=="Heavy intensity shower rain"
+                ||it=="Shower rain"||it=="Light intensity shower rain"||it=="Thunderstorm")
             {
                 binding.mainBack.setBackgroundResource(R.drawable.bg_rain)
                 binding.WeatherImage.setImageResource(R.drawable.rain)
@@ -252,7 +253,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
 
 
-            }else if(it.capitalize()=="Snow"||it.capitalize()=="Rain and snow"||it.capitalize()=="Light shower snow"||it.capitalize()=="Shower snow"){
+            }else if(it=="Snow"||it=="Rain and snow"||it=="Light shower snow"||it=="Shower snow"){
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_snow)
                     WeatherImage.setImageResource(R.drawable.snowflake)
@@ -262,7 +263,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                 }
 
 
-            }else if(it.capitalize()=="Smoke"||it.capitalize()=="Broken clouds"||it.capitalize()=="Overcast clouds"||it.capitalize()=="Scattered clouds"||it.capitalize()=="Mist"||it.capitalize()=="Few clouds") {
+            }else if(it=="Smoke"||it=="Broken clouds"||it=="Overcast clouds"||it=="Scattered clouds"||it=="Mist"||it=="Few clouds") {
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_rain)
                     WeatherImage.setImageResource(R.drawable.clouds)
@@ -272,7 +273,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                 }
 
 
-            }else if (it.capitalize()=="Clear sky"){
+            }else if (it=="Clear sky"){
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_sun)
                     WeatherImage.tag = 1
@@ -304,6 +305,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
         }
     }
 
+    @ExperimentalCoroutinesApi
     private fun setupEverything(){
 
         if (App.isConnectedToInternet(requireContext())){

@@ -24,14 +24,7 @@ class MainViewModel @Inject constructor(
     @ExperimentalCoroutinesApi
     fun requestWeather(mode: Int) = channelFlow {
         appRepository.requestWeather(mode).collectLatest {
-            when(it.status){
-                Resource.Status.SUCCESS -> {
-                    Log.d("ekoko", it.toString())
-                    send(it)
-                }
-                Resource.Status.ERROR ->   send(it)
-                Resource.Status.LOADING -> send(it)
-            }
+            send(it)
         }
     }.flowOn(Dispatchers.IO)
 

@@ -8,6 +8,7 @@ import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.example.weatherapp.R
+import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.databinding.ActivityWebPageBinding
 import java.net.URL
 
@@ -19,8 +20,8 @@ class WebPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web_page)
-
+        webBinding = ActivityWebPageBinding.inflate(layoutInflater)
+        setContentView(webBinding.root)
         webtask().execute()
 
     }
@@ -43,7 +44,7 @@ class WebPageActivity : AppCompatActivity() {
             webBinding.apply {
                 try {
 
-                    mWebView=findViewById(R.id.webWeather)
+                    mWebView = findViewById(R.id.webWeather)
                     mWebView.loadUrl("https://openweathermap.org/city/1512569")
                     val webSetting = mWebView.settings
                     webSetting.javaScriptEnabled=true
@@ -63,6 +64,7 @@ class WebPageActivity : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg params: String?): String? {
+
             var response:String?
             try{
                 response = URL("https://openweathermap.org/city/1512569").readText(
