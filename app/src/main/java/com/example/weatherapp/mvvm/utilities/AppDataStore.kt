@@ -2,6 +2,7 @@ package com.example.weatherapp.mvvm.utilities
 
 import android.content.Context
 import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -41,6 +42,25 @@ class AppDataStore @Inject constructor(context: Context) {
         runBlocking {
             dataStore.data.first {
                 value = it[PreferenceKeys.API] ?: ""
+                true
+            }
+        }
+
+        return value
+    }
+
+    fun isFirstLaunch(hashCode: Boolean) = runBlocking {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.LAUNCH] = hashCode
+        }
+    }
+
+
+    fun isFirsLaunch(): Boolean {
+        var value = true
+        runBlocking {
+            dataStore.data.first {
+                value = it[PreferenceKeys.LAUNCH] ?: true
                 true
             }
         }
@@ -115,9 +135,8 @@ class AppDataStore @Inject constructor(context: Context) {
 
     private object PreferenceKeys {
 //        val LOCATION_TITLE = stringPreferencesKey(Constants.LOCATION_TITLE)
-//        val PREFIX = stringPreferencesKey(Constants.PREFIX)
+        val LAUNCH = booleanPreferencesKey(Constants.LAUNCH)
         val CITY_ID = intPreferencesKey(Constants.CITY_ID)
-
         val CITY = stringPreferencesKey(Constants.CITY_KEY)
         val LANG_ID = stringPreferencesKey(Constants.LANGUAGE)
         val API = stringPreferencesKey(Constants.WEATHER_API)

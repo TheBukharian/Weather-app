@@ -25,6 +25,9 @@ class AppRepository @Inject constructor(
 ) : BaseDataSource() {
 
 
+    fun isFirstLaunch():Boolean = appDataStore.isFirsLaunch()
+    fun isFirstLaunch(v: Boolean) = appDataStore.isFirstLaunch(v)
+
     fun getApi():String = appDataStore.getAPI()
 
     fun setApi(api: String) = appDataStore.setAPI(api)

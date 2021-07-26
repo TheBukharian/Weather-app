@@ -57,11 +57,16 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
         if (!this::weatherJob.isInitialized) {
             weatherJob = Job()
         }
+
     }
 
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (appRepository.isFirstLaunch()){
+            appRepository.isFirstLaunch(false)
+
+        }
 
         animation1 = AnimationUtils.loadAnimation(requireActivity(),
             R.anim.cloud_move
@@ -308,18 +313,27 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
     @ExperimentalCoroutinesApi
     private fun setupEverything(){
 
-        if (App.isConnectedToInternet(requireContext())){
-            requestWeather(requestMode)
-        }else{
-            mainViewModel.getLastWeather().observe(viewLifecycleOwner){
-                it.let {
 
-                if (it != null){
-                    updateUi(it)
-                }else{
-                    Toast.makeText(requireContext(), "No such a weather was found", Toast.LENGTH_SHORT).show()
-                }
+        if (appRepository.isFirstLaunch()){
+            if (App.isConnectedToInternet(requireContext())){
+                requestWeather(requestMode)
             }
+        }
+        else{
+
+            if (App.isConnectedToInternet(requireContext())){
+                requestWeather(requestMode)
+            }else{
+                mainViewModel.getLastWeather().observe(viewLifecycleOwner){
+                    it.let {
+
+                        if (it != null){
+                            updateUi(it)
+                        }else{
+                            Toast.makeText(requireContext(), "No weather was found", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
     }

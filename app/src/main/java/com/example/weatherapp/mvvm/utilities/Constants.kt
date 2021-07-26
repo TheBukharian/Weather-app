@@ -15,6 +15,7 @@ object Constants {
     const val WEATHER_API = "openweathermap_api"
     const val API = "22a3091e71a2457fbc5d251844909997"
     const val LANGUAGE = "weather_language"
+    const val LAUNCH ="launCH"
     val SUPPORTED_LANGUAGES = listOf<String>(
         "en",
         "ru"
