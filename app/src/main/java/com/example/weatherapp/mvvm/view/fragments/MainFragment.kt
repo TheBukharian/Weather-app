@@ -51,7 +51,6 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
     private var requestMode = 2
 
     lateinit var animation1 : Animation
-    lateinit var animation2 : Animation
     lateinit var animation3 : Animation
     lateinit var animation4 : Animation
 
@@ -75,9 +74,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
         animation1 = AnimationUtils.loadAnimation(requireActivity(),
             R.anim.cloud_move
         )
-        animation2 = AnimationUtils.loadAnimation(requireActivity(),
-            R.anim.fast_rotation
-        )
+
         animation3 = AnimationUtils.loadAnimation(requireActivity(), R.anim.fade_in)
 
         animation4 = AnimationUtils.loadAnimation(requireActivity(), R.anim.cloud2)
@@ -104,25 +101,6 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
             }
         }
 
-
-        binding.box1.setOnClickListener {
-            binding.box1.startAnimation(animation2)
-        }
-        binding.box2.setOnClickListener {
-            binding.box2.startAnimation(animation2)
-        }
-        binding.box3.setOnClickListener {
-            binding.box3.startAnimation(animation2)
-        }
-        binding.box4.setOnClickListener {
-            binding.box4.startAnimation(animation2)
-        }
-        binding.box5.setOnClickListener {
-            binding.box5.startAnimation(animation2)
-        }
-        binding.infoWeather.setOnClickListener {
-            binding.infoWeather.startAnimation(animation2)
-        }
 
         binding.weatherUpdateBtn.setOnClickListener {
             requestWeather(requestMode)
