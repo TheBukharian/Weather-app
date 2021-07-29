@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".mvvm.view.fragments.MainFragment">
 
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:id="@+id/mainBack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_sun"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="285dp"
-            android:layout_marginTop="37dp"
-            android:src="@android:drawable/arrow_down_float"
-            />
 
         <TextView
             android:id="@+id/Error"
@@ -90,20 +82,15 @@
             android:layout_alignParentTop="true"
             app:tint="#FFFFFF" />
 
-        <ImageView
+        <View
             android:id="@+id/vintage2"
             android:layout_width="match_parent"
             android:layout_height="225dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginBottom="0dp"
-            android:adjustViewBounds="false"
-            android:scaleType="fitXY"
-            android:src="@drawable/vintage"
-            tools:layout_editor_absoluteY="564dp"
-            app:tint="#C8FFFFFF" />
+            android:background="#9AFFFFFF"
+             />
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
@@ -127,30 +114,37 @@
 
                 <LinearLayout
                     android:id="@+id/addressContainer"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/selector_rounded"
                     android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:focusable="true">
+                    android:orientation="vertical">
+
 
                     <TextView
                         android:id="@+id/address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:text="Tashkent, UZ"
-                        android:textSize="24sp" />
+                        android:textColor="#555555"
+                        android:textSize="21sp" />
 
                     <TextView
                         android:id="@+id/updated_at"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
                         android:text="Check an updated info"
-                        android:textSize="14sp"
-                        />
+                        android:textColor="#fff"
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -199,27 +193,23 @@
                 </LinearLayout>
 
 
-
-
-
-
-
                 <LinearLayout
                     android:id="@+id/detailsContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_height="205dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
                     android:orientation="vertical">
+
                     <ImageButton
                         android:id="@+id/weatherUpdateBtn"
                         android:layout_width="40dp"
                         android:layout_height="35dp"
                         android:layout_gravity="end"
                         android:background="@drawable/update_btn"
-                        android:src="@android:drawable/stat_notify_sync"
-                        />
+                        android:src="@android:drawable/stat_notify_sync" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -232,13 +222,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:animateLayoutChanges="false"
-                            android:background="#70FFFFFF"
+                            android:animateLayoutChanges="true"
+                            android:background="@drawable/selector_rounded"
                             android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="8dp"
-                            android:focusable="true">
+                            android:padding="8dp">
 
                             <ImageView
                                 android:layout_width="25dp"
@@ -264,19 +254,20 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
 
-
-
+                        <Space
+                            android:layout_width="10dp"
+                            android:layout_height="wrap_content" />
                         <LinearLayout
                             android:id="@+id/box2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="#70FFFFFF"
+                            android:background="@drawable/selector_rounded"
                             android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="8dp"
-                            android:focusable="true">
+                            android:padding="8dp">
 
                             <ImageView
                                 android:layout_width="25dp"
@@ -302,14 +293,16 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
 
-
+                        <Space
+                            android:layout_width="10dp"
+                            android:layout_height="wrap_content" />
 
                         <LinearLayout
                             android:id="@+id/box3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="#70FFFFFF"
+                            android:background="@drawable/selector_rounded"
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="vertical"
@@ -355,7 +348,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="#70FFFFFF"
+                            android:background="@drawable/selector_rounded"
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="vertical"
@@ -394,12 +387,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="#70FFFFFF"
+                            android:background="@drawable/selector_rounded"
                             android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="8dp"
-                            android:focusable="true">
+                            android:padding="8dp">
 
                             <ImageView
                                 android:layout_width="25dp"
@@ -434,7 +427,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="#FDFDFD"
+                            android:background="@drawable/selector_rounded"
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="vertical"
@@ -454,16 +447,16 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="More"
-                                android:textSize="12dp"
-                                android:textColor="#DDC096"/>
+                                android:textColor="#DDC096"
+                                android:textSize="12dp" />
 
                             <TextView
                                 android:id="@+id/about"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Information"
-                                android:textSize="12sp"
-                                android:textColor="#DDC096"/>
+                                android:textColor="#DDC096"
+                                android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -478,22 +471,23 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="1dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="35dp"
                     android:layout_marginEnd="0dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="25dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/WeatherImage"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="30dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
                         android:clickable="true"
-                        app:srcCompat="@drawable/sunny" />
+                        app:srcCompat="@drawable/sunny"
+                        android:focusable="true" />
                 </RelativeLayout>
 
 

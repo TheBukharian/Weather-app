@@ -44,5 +44,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun setSelectedCityName(name: String){
+        appRepository.setSelectedCity(name)
+    }
+
 
 }

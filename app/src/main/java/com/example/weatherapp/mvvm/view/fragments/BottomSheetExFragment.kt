@@ -3,27 +3,64 @@ package com.example.weatherapp.mvvm.view.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.viewbinding.library.bottomsheetdialogfragment.viewBinding
 import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.mvvm.view.activities.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentBottomSheetExBinding
+import com.example.weatherapp.databinding.MainFragmentBinding
+import com.example.weatherapp.mvvm.extensions.navigateSafe
+import com.example.weatherapp.mvvm.extensions.viewLifecycleLazy
+import com.example.weatherapp.mvvm.repositories.AppRepository
+import com.example.weatherapp.mvvm.viewmodel.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 class BottomSheetExFragment : BottomSheetDialogFragment()  {
 
     private var mBottomSheetListener: BottomSheetListener?=null
-    private lateinit var bottomBinding: FragmentBottomSheetExBinding
+    private val bottomBinding: FragmentBottomSheetExBinding by viewBinding()
+    private val mainViewModel by activityViewModels<MainViewModel>()
 
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return bottomBinding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+        bottomBinding.root.setBackgroundResource(R.color.transparent)
+
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.ThemeOverlay_Demo_BottomSheetDialog)
+
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         val regions= arrayOf(
             "Samarkand,UZ",
@@ -44,12 +81,12 @@ class BottomSheetExFragment : BottomSheetDialogFragment()  {
                 android.R.layout.simple_list_item_1,
                 regions)
 
+
         bottomBinding.apply {
+
+
             btmList.adapter=regAdapter
-
-
-
-
+            btmList.isNestedScrollingEnabled = false
 
             btmSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 
@@ -69,18 +106,14 @@ class BottomSheetExFragment : BottomSheetDialogFragment()  {
                 val adr = activity?.findViewById<TextView>(R.id.address)
 
 
+                mainViewModel.setSelectedCityName(itemText)
 
-                val intent= Intent(context, MainActivity::class.java)
-                intent.putExtra("EXTRA_CITY",itemText)
-                intent.flags =Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
 
                 if (adr != null) {
                     adr.text=itemText
                 }
 
-
-
+                findNavController().navigateSafe(R.id.toMainFragment)
                 Toast.makeText(requireContext(),"${adr?.text} SELECTED",Toast.LENGTH_LONG).show()
 
             }

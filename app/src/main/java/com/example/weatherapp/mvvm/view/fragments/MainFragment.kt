@@ -17,12 +17,15 @@ import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.MainFragmentBinding
 import com.example.weatherapp.mvvm.base.Resource
 import com.example.weatherapp.mvvm.data.WeatherData
 import com.example.weatherapp.mvvm.extensions.capitalize
+import com.example.weatherapp.mvvm.extensions.navigateSafe
 import com.example.weatherapp.mvvm.extensions.viewLifecycleLazy
 import com.example.weatherapp.mvvm.utilities.App
 import com.example.weatherapp.mvvm.view.activities.WebPageActivity
@@ -67,6 +70,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
             appRepository.isFirstLaunch(false)
 
         }
+
 
         animation1 = AnimationUtils.loadAnimation(requireActivity(),
             R.anim.cloud_move
@@ -127,9 +131,8 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
             requestWeather(requestMode)
         }
         binding.addressContainer.setOnClickListener {
+            findNavController().navigateSafe(R.id.toBottomSheet)
 
-            val bottomSheet= BottomSheetExFragment()
-            bottomSheet.show(requireActivity().supportFragmentManager,"BottomSheetEx")
         }
 
         binding.infoWeather.setOnClickListener {
@@ -145,66 +148,61 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
         mainViewModel.requestWeather(mode).collectLatest {
 
-            if (it != null){
-
-                when(it.status){
-                    Resource.Status.SUCCESS -> {
-                        if (it.data != null){
+            when(it.status){
+                Resource.Status.SUCCESS -> {
+                    if (it.data != null){
 
 
-                            it.data.let { response ->
-                                val job = async{
+                        it.data.let { response ->
+                            val job = async{
 
-                                    val weather = WeatherData(
-                                        country_id = response.sys.id,
-                                        country = response.sys.country,
-                                        temp = response.main.temp,
-                                        temp_max = response.main.temp_max,
-                                        temp_min = response.main.temp_min,
-                                        humidity = response.main.humidity,
-                                        pressure = response.main.pressure,
-                                        lat = response.coord.lat,
-                                        lon = response.coord.lon,
-                                        visibility = response.visibility,
-                                        sunrise = response.sys.sunrise,
-                                        sunset = response.sys.sunset,
-                                        type = response.sys.type,
-                                        description = response.weather.last().description.capitalize(),
-                                        wind_speed = response.wind.speed,
-                                        wind_deg = response.wind.deg,
-                                        date = response.dt.toString(),
-                                        city = response.name
-                                    )
+                                val weather = WeatherData(
+                                    country_id = response.sys.id,
+                                    country = response.sys.country,
+                                    temp = response.main.temp,
+                                    temp_max = response.main.temp_max,
+                                    temp_min = response.main.temp_min,
+                                    humidity = response.main.humidity,
+                                    pressure = response.main.pressure,
+                                    lat = response.coord.lat,
+                                    lon = response.coord.lon,
+                                    visibility = response.visibility,
+                                    sunrise = response.sys.sunrise,
+                                    sunset = response.sys.sunset,
+                                    type = response.sys.type,
+                                    description = response.weather.last().description.capitalize(),
+                                    wind_speed = response.wind.speed,
+                                    wind_deg = response.wind.deg,
+                                    date = response.dt.toString(),
+                                    city = response.name
+                                )
 
-                                    mainViewModel.saveToDatabase(weather)
-                                    updateUi(weather)
-                                }
+                                mainViewModel.saveToDatabase(weather)
+                                updateUi(weather)
+                            }
 
-                                job.await()
-                                if(job.isCompleted){
-                                    weatherJob.cancel()
-                                }
+                            job.await()
+                            if(job.isCompleted){
+                                weatherJob.cancel()
                             }
                         }
                     }
-
-                    Resource.Status.ERROR -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error on request from Api",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                    }
-
-                    Resource.Status.LOADING -> {
-                        binding.loader.visibility = View.VISIBLE
-                        binding.mainContainer.visibility = View.GONE
-                        binding.imageButton.visibility = View.GONE
-                        binding.arrow.visibility = View.GONE
-                    }
                 }
 
+                Resource.Status.ERROR -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error on request from Api",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+
+                Resource.Status.LOADING -> {
+                    binding.loader.visibility = View.VISIBLE
+                    binding.mainContainer.visibility = View.GONE
+                    binding.imageButton.visibility = View.GONE
+                }
             }
         }
     }
@@ -306,7 +304,6 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
             loader.visibility = View.GONE
             mainContainer.visibility = View.VISIBLE
             Error.visibility = View.GONE
-            arrow.visibility = View.VISIBLE
         }
     }
 
@@ -329,6 +326,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
                         if (it != null){
                             updateUi(it)
+
                         }else{
                             Toast.makeText(requireContext(), "No weather was found", Toast.LENGTH_SHORT).show()
                         }

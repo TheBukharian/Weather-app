@@ -9,5 +9,18 @@
         android:id="@+id/mainFragment"
         android:name="com.example.weatherapp.mvvm.view.fragments.MainFragment"
         android:label="main_fragment"
-        tools:layout="@layout/main_fragment" />
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/toBottomSheet"
+            app:destination="@id/bottomSheetExFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/bottomSheetExFragment"
+        android:name="com.example.weatherapp.mvvm.view.fragments.BottomSheetExFragment"
+        android:label="fragment_bottom_sheet_ex"
+        tools:layout="@layout/fragment_bottom_sheet_ex" >
+        <action
+            android:id="@+id/toMainFragment"
+            app:destination="@id/mainFragment" />
+    </dialog>
 </navigation>

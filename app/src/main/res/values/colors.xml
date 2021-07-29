@@ -4,5 +4,9 @@
     <color name="colorPrimaryDark">#77EBB34D</color>
     <color name="colorAccent">#555555</color>
     <color name="Day">#75CE931C</color>
+    <color name="transparent">#00222222</color>
+    <color name="white">#FFFFFF</color>
+
+
 
 </resources>

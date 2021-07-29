@@ -92,6 +92,10 @@ class AppRepository @Inject constructor(
         Log.d("ekoko", "message error: $it")
     }
 
+    fun setSelectedCity(string: String){
+        appDataStore.setSelectedCity(string)
+    }
+
 
 
 
