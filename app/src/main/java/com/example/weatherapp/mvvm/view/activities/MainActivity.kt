@@ -27,6 +27,7 @@ import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.mvvm.utilities.AppDataStore
 import com.example.weatherapp.mvvm.utilities.Constants
 import com.example.weatherapp.mvvm.view.fragments.BottomSheetExFragment
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.AndroidEntryPoint
 import net.danlew.android.joda.JodaTimeInitializer
 import org.json.JSONObject
@@ -62,6 +63,8 @@ class MainActivity : AppCompatActivity(), BottomSheetExFragment.BottomSheetListe
         val navController = navHostFragment.navController
 
         AppInitializer.getInstance(this).initializeComponent(JodaTimeInitializer::class.java)
+        MobileAds.initialize(this) {}
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

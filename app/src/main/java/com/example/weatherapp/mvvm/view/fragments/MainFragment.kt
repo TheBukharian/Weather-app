@@ -28,8 +28,16 @@ import com.example.weatherapp.mvvm.extensions.capitalize
 import com.example.weatherapp.mvvm.extensions.navigateSafe
 import com.example.weatherapp.mvvm.extensions.viewLifecycleLazy
 import com.example.weatherapp.mvvm.utilities.App
+import com.example.weatherapp.mvvm.utilities.Constants
 import com.example.weatherapp.mvvm.view.activities.WebPageActivity
 import com.example.weatherapp.mvvm.viewmodel.MainViewModel
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -49,29 +57,40 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
     private lateinit var weatherJob: CompletableJob
     private var requestMode = 2
+    private val TAG = "MainFragment"
+    private var mInterstitialAd: InterstitialAd? = null
+    var isDestroyed = false
 
-    lateinit var animation1 : Animation
-    lateinit var animation3 : Animation
-    lateinit var animation4 : Animation
+    lateinit var animation1: Animation
+    lateinit var animation3: Animation
+    lateinit var animation4: Animation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!this::weatherJob.isInitialized) {
             weatherJob = Job()
         }
+        MobileAds.initialize(requireContext()) {}
 
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder()
+                .setTestDeviceIds(listOf("868139039260754"))
+                .build()
+        )
+        showInterstitial()
     }
 
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (appRepository.isFirstLaunch()){
+        if (appRepository.isFirstLaunch()) {
             appRepository.isFirstLaunch(false)
 
         }
 
 
-        animation1 = AnimationUtils.loadAnimation(requireActivity(),
+        animation1 = AnimationUtils.loadAnimation(
+            requireActivity(),
             R.anim.cloud_move
         )
 
@@ -87,23 +106,24 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
         setupEverything()
 
-        if (binding.WeatherImage.tag == 1){
+        if (binding.WeatherImage.tag == 1) {
             image.startAnimation(animation1)
             binding.WeatherImage.setOnClickListener {
                 image.startAnimation(animation1)
             }
 
-        }else {
+        } else {
             image.startAnimation(animation3)
             binding.WeatherImage.setOnClickListener {
                 image.startAnimation(animation3)
-                Log.d("MainActivity","${binding.WeatherImage.tag}")
+                Log.d("MainActivity", "${binding.WeatherImage.tag}")
             }
         }
 
 
         binding.weatherUpdateBtn.setOnClickListener {
             requestWeather(requestMode)
+            showInterstitial()
         }
         binding.imageButton.setOnClickListener {
             requestWeather(requestMode)
@@ -121,18 +141,72 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
     }
 
+    private fun loadAd() {
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            requireContext(), Constants.AD_UNIT_ID, adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(TAG, adError.message)
+                    mInterstitialAd = null
+                    val error = "domain: ${adError.domain}, code: ${adError.code}, " +
+                            "message: ${adError.message}"
+                    Toast.makeText(requireContext(),
+                        "onAdFailedToLoad() with error $error",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d(TAG, "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                    Toast.makeText(requireContext(), "onAdLoaded()", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+    }
+    private fun showInterstitial() {
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    Log.d(TAG, "Ad was dismissed.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mInterstitialAd = null
+                    loadAd()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                    Log.d(TAG, "Ad failed to show.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mInterstitialAd = null
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    Log.d(TAG, "Ad showed fullscreen content.")
+                    // Called when ad is dismissed.
+                }
+            }
+            mInterstitialAd?.show(requireActivity())
+        } else {
+            Toast.makeText(requireContext(), "Ad wasn't loaded.", Toast.LENGTH_SHORT).show()
+            loadAd()
+        }
+    }
     @ExperimentalCoroutinesApi
-    private fun requestWeather(mode: Int) = CoroutineScope(Dispatchers.Main + weatherJob).launch{
+    private fun requestWeather(mode: Int) = CoroutineScope(Dispatchers.Main + weatherJob).launch {
 
         mainViewModel.requestWeather(mode).collectLatest {
 
-            when(it.status){
+            when (it.status) {
                 Resource.Status.SUCCESS -> {
-                    if (it.data != null){
+                    if (it.data != null) {
 
 
                         it.data.let { response ->
-                            val job = async{
+                            val job = async {
 
                                 val weather = WeatherData(
                                     country_id = response.sys.id,
@@ -160,7 +234,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                             }
 
                             job.await()
-                            if(job.isCompleted){
+                            if (job.isCompleted) {
                                 weatherJob.cancel()
                             }
                         }
@@ -187,14 +261,23 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
 
     @SuppressLint("SetTextI18n")
-    private fun updateUi(weather: WeatherData){
+    private fun updateUi(weather: WeatherData) {
         binding.apply {
 
-            val date = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(weather.date.toLong() * 1000))
+            val date = SimpleDateFormat(
+                "dd/MM/yyyy hh:mm a",
+                Locale.ENGLISH
+            ).format(Date(weather.date.toLong() * 1000))
 
-            val sunriseTime = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(weather.sunrise.toLong() * 1000))
+            val sunriseTime = SimpleDateFormat(
+                "hh:mm a",
+                Locale.ENGLISH
+            ).format(Date(weather.sunrise.toLong() * 1000))
 
-            val sunsetTime = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(weather.sunset.toLong() * 1000))
+            val sunsetTime = SimpleDateFormat(
+                "hh:mm a",
+                Locale.ENGLISH
+            ).format(Date(weather.sunset.toLong() * 1000))
 
             //Converting kelvin to celsius is easy: Just subtract 273.15
             val tempNum = (weather.temp - 273.15).roundToInt()
@@ -211,19 +294,21 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
             humidity.text = "${weather.humidity}%"
         }
 
-        val animation1 : Animation=AnimationUtils.loadAnimation(requireActivity(),
+        val animation1: Animation = AnimationUtils.loadAnimation(
+            requireActivity(),
             R.anim.cloud_move
         )
-        val animation4 : Animation=AnimationUtils.loadAnimation(requireActivity(),
+        val animation4: Animation = AnimationUtils.loadAnimation(
+            requireActivity(),
             R.anim.cloud2
         )
 
 
         weather.description.let {
 
-            if(it=="Rain"||it=="Light rain"||it=="Heavy intensity rain"||it=="Heavy intensity shower rain"
-                ||it=="Shower rain"||it=="Light intensity shower rain"||it=="Thunderstorm")
-            {
+            if (it == "Rain" || it == "Light rain" || it == "Heavy intensity rain" || it == "Heavy intensity shower rain"
+                || it == "Shower rain" || it == "Light intensity shower rain" || it == "Thunderstorm"
+            ) {
                 binding.mainBack.setBackgroundResource(R.drawable.bg_rain)
                 binding.WeatherImage.setImageResource(R.drawable.rain)
                 binding.WeatherImage.tag = R.drawable.rain
@@ -231,10 +316,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                 binding.vintageo.startAnimation(animation4)
 
 
-
-
-
-            }else if(it=="Snow"||it=="Rain and snow"||it=="Light shower snow"||it=="Shower snow"){
+            } else if (it == "Snow" || it == "Rain and snow" || it == "Light shower snow" || it == "Shower snow") {
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_snow)
                     WeatherImage.setImageResource(R.drawable.snowflake)
@@ -244,7 +326,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                 }
 
 
-            }else if(it=="Smoke"||it=="Broken clouds"||it=="Overcast clouds"||it=="Scattered clouds"||it=="Mist"||it=="Few clouds") {
+            } else if (it == "Smoke" || it == "Broken clouds" || it == "Overcast clouds" || it == "Scattered clouds" || it == "Mist" || it == "Few clouds") {
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_rain)
                     WeatherImage.setImageResource(R.drawable.clouds)
@@ -254,7 +336,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                 }
 
 
-            }else if (it=="Clear sky"){
+            } else if (it == "Clear sky") {
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_sun)
                     WeatherImage.tag = 1
@@ -263,7 +345,7 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                     vintage2.visibility = View.GONE
                     vintageo.visibility = View.GONE
                 }
-            }else{
+            } else {
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_sun)
                     WeatherImage.tag = 1
@@ -286,27 +368,30 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
     }
 
     @ExperimentalCoroutinesApi
-    private fun setupEverything(){
+    private fun setupEverything() {
 
 
-        if (appRepository.isFirstLaunch()){
-            if (App.isConnectedToInternet(requireContext())){
+        if (appRepository.isFirstLaunch()) {
+            if (App.isConnectedToInternet(requireContext())) {
                 requestWeather(requestMode)
             }
-        }
-        else{
+        } else {
 
-            if (App.isConnectedToInternet(requireContext())){
+            if (App.isConnectedToInternet(requireContext())) {
                 requestWeather(requestMode)
-            }else{
-                mainViewModel.getLastWeather().observe(viewLifecycleOwner){
+            } else {
+                mainViewModel.getLastWeather().observe(viewLifecycleOwner) {
                     it.let {
 
-                        if (it != null){
+                        if (it != null) {
                             updateUi(it)
 
-                        }else{
-                            Toast.makeText(requireContext(), "No weather was found", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "No weather was found",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
@@ -315,11 +400,10 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
     }
 
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        inflater.inflate(R.menu.menu_nav,menu)
+        inflater.inflate(R.menu.menu_nav, menu)
         val item = menu.findItem(R.id.switcher)
         item.setActionView(R.layout.switch_layout)
         val mySwitch = item.actionView.findViewById<SwitchCompat>(R.id.switchForActionBar)
@@ -337,23 +421,21 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                     box5.setBackgroundColor(Color.parseColor("#3C242424"))
                     infoWeather.setBackgroundColor(Color.parseColor("#86242424"))
                     mainBack.setBackgroundResource(R.drawable.dark_theme)
-                    if(status.text=="Rain"
-                        ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
-                    {
+                    if (status.text == "Rain"
+                        || status.text == "Shower rain" || status.text == "Light intensity shower rain"
+                    ) {
                         WeatherImage.setImageResource(R.drawable.rain)
 
 
-
-
-                    }else if(status.text=="Snow"){
+                    } else if (status.text == "Snow") {
                         WeatherImage.setImageResource(R.drawable.snowflake)
 
 
-                    }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
+                    } else if (status.text == "Smoke" || status.text == "Broken clouds" || status.text == "Scattered clouds" || status.text == "Mist") {
                         WeatherImage.setImageResource(R.drawable.clouds)
 
 
-                    }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
+                    } else if (status.text == "Overcast clouds" || status.text == "Clear sky") {
                         WeatherImage.setImageResource(R.drawable.sunny)
                     }
 
@@ -368,26 +450,24 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
                     infoWeather.setBackgroundColor(Color.parseColor("#83FDFDFD"))
                     mainBack.setBackgroundResource(R.drawable.bg_sun)
 
-                    if(status.text=="Rain"
-                        ||status.text=="Shower rain"||status.text=="Light intensity shower rain")
-                    {
+                    if (status.text == "Rain"
+                        || status.text == "Shower rain" || status.text == "Light intensity shower rain"
+                    ) {
                         mainBack.setBackgroundResource(R.drawable.bg_rain)
                         WeatherImage.setImageResource(R.drawable.rain)
 
 
-
-
-                    }else if(status.text=="Snow"){
+                    } else if (status.text == "Snow") {
                         mainBack.setBackgroundResource(R.drawable.bg_snow)
                         WeatherImage.setImageResource(R.drawable.snowflake)
 
 
-                    }else if(status.text=="Smoke"||status.text=="Broken clouds"||status.text=="Scattered clouds"||status.text=="Mist") {
+                    } else if (status.text == "Smoke" || status.text == "Broken clouds" || status.text == "Scattered clouds" || status.text == "Mist") {
                         mainBack.setBackgroundResource(R.drawable.bg_rain)
                         WeatherImage.setImageResource(R.drawable.clouds)
 
 
-                    }else if (status.text=="Overcast clouds"||status.text=="Clear sky"){
+                    } else if (status.text == "Overcast clouds" || status.text == "Clear sky") {
                         mainBack.setBackgroundResource(R.drawable.bg_sun)
                         WeatherImage.setImageResource(R.drawable.sunny)
                     }
@@ -400,27 +480,27 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when (item.itemId){
+        when (item.itemId) {
             R.id.shareMenu -> {
-                try{
-                    val shareIntent =Intent(Intent.ACTION_SEND)
+                try {
+                    val shareIntent = Intent(Intent.ACTION_SEND)
                     shareIntent.type = "text/plain"
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Weather Info")
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Weather Info")
                     var shareMessage = "\nLet`s try this Weather application:\n\n"
-                    shareMessage = shareMessage+ "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n"
-                    shareIntent.putExtra(Intent.EXTRA_TEXT,shareMessage)
+                    shareMessage =
+                        shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n"
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
                     startActivity(Intent.createChooser(shareIntent, "Share with "))
-                }
-                catch (e:Exception){
-                    Log.d("MainActivity","Couldn` t load the web site")
+                } catch (e: Exception) {
+                    Log.d("MainActivity", "Couldn` t load the web site")
                 }
             }
 
-            R.id.exitMenu ->{
+            R.id.exitMenu -> {
                 android.os.Process.killProcess(android.os.Process.myPid())
                 exitProcess(1)
             }
-            R.id.More ->{
+            R.id.More -> {
                 Toast.makeText(requireContext(), "Google Play Opened...", Toast.LENGTH_LONG).show()
             }
         }
@@ -430,9 +510,10 @@ class MainFragment : BaseFragment(R.layout.main_fragment) {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (!weatherJob.isCancelled){
+        if (!weatherJob.isCancelled) {
             weatherJob.cancel()
         }
+        isDestroyed = true
     }
 
 }

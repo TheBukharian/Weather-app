@@ -16,6 +16,7 @@ object Constants {
     const val API = "22a3091e71a2457fbc5d251844909997"
     const val LANGUAGE = "weather_language"
     const val LAUNCH ="launCH"
+    const val AD_UNIT_ID = "ca-app-pub-2343736594040989/1546269088"
     val SUPPORTED_LANGUAGES = listOf<String>(
         "en",
         "ru"

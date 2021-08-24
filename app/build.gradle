@@ -120,6 +120,17 @@ dependencies {
     //BottomSheet
     implementation 'com.github.yogacp:android-viewbinding:1.0.3'
 
+    // Required -- JUnit 4 framework
+    testImplementation("junit:junit:4.13.2")
+    // Optional -- Robolectric environment
+    testImplementation('androidx.test:core:1.4.0')
+    // Optional -- Mockito framework
+    testImplementation("org.mockito:mockito-core:1.10.19")
+
+    //AdMob
+    implementation 'com.google.android.gms:play-services-ads:20.2.0'
+
+
 
 
 
