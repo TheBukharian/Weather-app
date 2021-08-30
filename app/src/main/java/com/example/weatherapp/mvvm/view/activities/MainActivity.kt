@@ -21,13 +21,18 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.startup.AppInitializer
+import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ActivityMainBinding
+import com.example.weatherapp.mvvm.adapters.ViewPagerAdapter
 import com.example.weatherapp.mvvm.utilities.AppDataStore
 import com.example.weatherapp.mvvm.utilities.Constants
 import com.example.weatherapp.mvvm.view.fragments.BottomSheetExFragment
+import com.example.weatherapp.mvvm.view.fragments.MainFragment
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import net.danlew.android.joda.JodaTimeInitializer
 import org.json.JSONObject
@@ -51,12 +56,14 @@ class MainActivity : AppCompatActivity(), BottomSheetExFragment.BottomSheetListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.setIcon(R.mipmap.ic_launcher)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.mipmap.ic_launcher)
         supportActionBar?.setDisplayUseLogoEnabled(true)
+
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -75,7 +82,10 @@ class MainActivity : AppCompatActivity(), BottomSheetExFragment.BottomSheetListe
 
     }
 
+    override fun onOptionClick(text: String) {
+        TODO("Not yet implemented")
+    }
 
-    override fun onOptionClick(text: String) {}
+
 }
 

@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/AndroidPROJECTS/Weather-app-updated/app/src/main/res/drawable/rounded_tab_item.xml" value="0.19375" />
+        <entry key="..\:/Projects/AndroidPROJECTS/Weather-app-updated/app/src/main/res/drawable/selector_rounded.xml" value="0.19375" />
+        <entry key="..\:/Projects/AndroidPROJECTS/Weather-app-updated/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Projects/AndroidPROJECTS/Weather-app-updated/app/src/main/res/layout/fragment_second.xml" value="0.16393442622950818" />
+        <entry key="..\:/Projects/AndroidPROJECTS/Weather-app-updated/app/src/main/res/layout/fragment_third.xml" value="0.1598360655737705" />
         <entry key="..\:/Projects/AndroidPROJECTS/Weather-app-updated/app/src/main/res/layout/main_fragment.xml" value="0.11202185792349727" />
+        <entry key="..\:/Projects/AndroidPROJECTS/Weather-app-updated/app/src/main/res/layout/tab_item_layout.xml" value="0.2" />
       </map>
     </option>
   </component>
