@@ -32,14 +32,14 @@ class MainViewModel @Inject constructor(
         appRepository.saveWeather(weather)
     }
 
-    fun getWeatherByCountryID(id: Int) = liveData(viewModelScope.coroutineContext + Dispatchers.IO)  {
-         appRepository.selectWeatherFromDb(id).collect {
+    fun getWeatherByCityName(city: String) = liveData(viewModelScope.coroutineContext + Dispatchers.IO)  {
+         appRepository.selectWeatherFromDb(city).collect {
              emit(it)
          }
     }
 
     fun getLastWeather() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-        appRepository.selectWeatherFromDb(appRepository.getLatestCountryID()).collect {
+        appRepository.selectWeatherFromDb(appRepository.getSelectedCity()).collect {
             emit(it)
         }
     }

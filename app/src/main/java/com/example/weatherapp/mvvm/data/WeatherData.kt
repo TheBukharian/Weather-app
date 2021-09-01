@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "weather_table", indices = [Index(value = ["country_id"], unique = true)])
+@Entity(tableName = "weather_table", indices = [Index(value = ["country_id","city"], unique = true)])
 data class WeatherData(
 
     @PrimaryKey(autoGenerate = false)

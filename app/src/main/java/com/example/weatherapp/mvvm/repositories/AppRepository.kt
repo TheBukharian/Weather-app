@@ -40,8 +40,8 @@ class AppRepository @Inject constructor(
         appDatabase.weatherDao().updateWeather(weatherData)
     }
 
-     fun selectWeatherFromDb(countryId: Int) = flow {
-         emit(appDatabase.weatherDao().getWeatherById(countryId))
+     fun selectWeatherFromDb(city: String) = flow {
+         emit(appDatabase.weatherDao().getWeatherById(city))
      }.flowOn(Dispatchers.IO)
 
     fun setLatestCountryID(id:Int){
@@ -51,6 +51,8 @@ class AppRepository @Inject constructor(
     fun getLatestCountryID(): Int {
         return appDataStore.getLatestCountry()
     }
+
+    fun getSelectedCity() = appDataStore.getSelectedCity()
 
 
     suspend fun requestWeather(mode: Int) = flow {

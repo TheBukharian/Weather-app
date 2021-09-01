@@ -102,8 +102,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
-            android:padding="20dp"
-            >
+            android:padding="20dp">
 
 
             <RelativeLayout
@@ -258,6 +257,7 @@
                         <Space
                             android:layout_width="10dp"
                             android:layout_height="wrap_content" />
+
                         <LinearLayout
                             android:id="@+id/box2"
                             android:layout_width="0dp"
@@ -487,8 +487,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
                         android:clickable="true"
-                        app:srcCompat="@drawable/sunny"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        app:srcCompat="@drawable/sunny" />
                 </RelativeLayout>
 
 

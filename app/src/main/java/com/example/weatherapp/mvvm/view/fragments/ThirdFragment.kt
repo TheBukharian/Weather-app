@@ -20,6 +20,7 @@ import com.example.weatherapp.mvvm.base.Resource
 import com.example.weatherapp.mvvm.data.WeatherData
 import com.example.weatherapp.mvvm.extensions.capitalize
 import com.example.weatherapp.mvvm.extensions.navigateSafe
+import com.example.weatherapp.mvvm.interfaces.UiUpdateListener
 import com.example.weatherapp.mvvm.utilities.App
 import com.example.weatherapp.mvvm.utilities.Constants
 import com.example.weatherapp.mvvm.view.activities.WebPageActivity
@@ -42,9 +43,9 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
     private val mainViewModel by viewModels<MainViewModel>()
 
-    private var mInterstitialAd: InterstitialAd? = null
     private lateinit var weatherJob: CompletableJob
-    private val TAG = "MainFragment"
+    private lateinit var uiListener: UiUpdateListener
+    private var mInterstitialAd: InterstitialAd? = null
     private var requestMode = 2
     var isDestroyed = false
 
@@ -90,6 +91,12 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
         }
 
+        uiListener = object : UiUpdateListener{
+            override fun onUpdateUi(weatherData: WeatherData) {
+                updateUi(weatherData)
+            }
+        }
+
 
         animation1 = AnimationUtils.loadAnimation(
             requireActivity(),
@@ -100,39 +107,20 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
         animation4 = AnimationUtils.loadAnimation(requireActivity(), R.anim.cloud2)
 
-        val image = binding.WeatherImage
         binding.address.text = arguments?.getString("EXTRA_CITY")
         binding.address.paintFlags = binding.address.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.vintage4.startAnimation(animation4)
 
 
-        setupEverything()
-
-        if (binding.WeatherImage.tag == 1) {
-            image.startAnimation(animation1)
-            binding.WeatherImage.setOnClickListener {
-                image.startAnimation(animation1)
-            }
-
-        } else {
-            image.startAnimation(animation3)
-            binding.WeatherImage.setOnClickListener {
-                image.startAnimation(animation3)
-                Log.d("MainActivity", "${binding.WeatherImage.tag}")
-            }
-        }
 
 
         binding.weatherUpdateBtn.setOnClickListener {
+
             requestWeather(requestMode)
             showInterstitial()
         }
-        binding.imageButton.setOnClickListener {
-            requestWeather(requestMode)
-        }
+
         binding.addressContainer.setOnClickListener {
             findNavController().navigateSafe(R.id.toBottomSheet)
-
         }
 
         binding.infoWeather.setOnClickListener {
@@ -143,6 +131,14 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
     }
 
+    @ExperimentalCoroutinesApi
+    override fun onResume() {
+        super.onResume()
+
+        setupEverything()
+
+    }
+
     private fun loadAd() {
         val adRequest = AdRequest.Builder().build()
 
@@ -150,7 +146,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
             requireContext(), Constants.AD_UNIT_ID, adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d(TAG, adError.message)
+                    Log.d(Companion.TAG, adError.message)
                     mInterstitialAd = null
                     val error = "domain: ${adError.domain}, code: ${adError.code}, " +
                             "message: ${adError.message}"
@@ -162,7 +158,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 }
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d(TAG, "Ad was loaded.")
+                    Log.d(Companion.TAG, "Ad was loaded.")
                     mInterstitialAd = interstitialAd
                     Toast.makeText(requireContext(), "onAdLoaded()", Toast.LENGTH_SHORT).show()
                 }
@@ -175,7 +171,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
         if (mInterstitialAd != null) {
             mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
-                    Log.d(TAG, "Ad was dismissed.")
+                    Log.d(Companion.TAG, "Ad was dismissed.")
                     // Don't forget to set the ad reference to null so you
                     // don't show the ad a second time.
                     mInterstitialAd = null
@@ -183,14 +179,14 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                    Log.d(TAG, "Ad failed to show.")
+                    Log.d(Companion.TAG, "Ad failed to show.")
                     // Don't forget to set the ad reference to null so you
                     // don't show the ad a second time.
                     mInterstitialAd = null
                 }
 
                 override fun onAdShowedFullScreenContent() {
-                    Log.d(TAG, "Ad showed fullscreen content.")
+                    Log.d(Companion.TAG, "Ad showed fullscreen content.")
                     // Called when ad is dismissed.
                 }
             }
@@ -202,18 +198,19 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     }
 
     @ExperimentalCoroutinesApi
-    private fun requestWeather(mode: Int) = CoroutineScope(Dispatchers.Main + weatherJob).launch {
+    private fun requestWeather(mode: Int)  {
+        weatherJob.cancel()
 
-        mainViewModel.requestWeather(mode).collectLatest {
+        weatherJob = Job()
+        CoroutineScope(Dispatchers.Main + weatherJob).launch{
+            mainViewModel.requestWeather(mode).collectLatest {
 
-            when (it.status) {
-                Resource.Status.SUCCESS -> {
-                    if (it.data != null) {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        if (it.data != null) {
 
 
-                        it.data.let { response ->
-                            val job = async {
-
+                            it.data.let { response ->
                                 val weather = WeatherData(
                                     country_id = response.sys.id,
                                     country = response.sys.country,
@@ -236,32 +233,28 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                                 )
 
                                 mainViewModel.saveToDatabase(weather)
-                                updateUi(weather)
-                            }
-
-                            job.await()
-                            if (job.isCompleted) {
-                                weatherJob.cancel()
+                                uiListener.onUpdateUi(weather)
                             }
                         }
                     }
-                }
 
-                Resource.Status.ERROR -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Error on request from Api",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Resource.Status.ERROR -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error on request from Api",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                }
+                    }
 
-                Resource.Status.LOADING -> {
-                    binding.loader.visibility = View.VISIBLE
-                    binding.mainContainer.visibility = View.GONE
-                    binding.imageButton.visibility = View.GONE
+                    Resource.Status.LOADING -> {
+                        binding.loader.visibility = View.VISIBLE
+                        binding.mainContainer.visibility = View.GONE
+                        binding.imageButton.visibility = View.GONE
+                    }
                 }
             }
+
         }
     }
 
@@ -312,33 +305,52 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
         weather.description.let {
 
-            if (it == "Rain" || it == "Light rain" || it == "Heavy intensity rain" || it == "Heavy intensity shower rain"
-                || it == "Shower rain" || it == "Light intensity shower rain" || it == "Thunderstorm"
+            if (it.lowercase().contains("rain") || it == "Thunderstorm"
             ) {
                 binding.mainBack.setBackgroundResource(R.drawable.bg_rain)
                 binding.WeatherImage.setImageResource(R.drawable.rain)
+                binding.updatedAt.setTextColor(Color.GRAY)
                 binding.WeatherImage.tag = R.drawable.rain
+                binding.vintage4.visibility = View.VISIBLE
+                binding.vintageo2.visibility = View.VISIBLE
+                binding.vintage4.startAnimation(animation1)
                 binding.vintage.startAnimation(animation1)
                 binding.vintageo.startAnimation(animation4)
 
 
-            } else if (it == "Snow" || it == "Rain and snow" || it == "Light shower snow" || it == "Shower snow") {
+
+            } else if (it.lowercase().contains("snow")) {
+
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_snow)
                     WeatherImage.setImageResource(R.drawable.snowflake)
+                    binding.updatedAt.setTextColor(Color.GRAY)
+
                     WeatherImage.tag = R.drawable.snowflake
-                    vintage.startAnimation(animation1)
-                    vintageo.startAnimation(animation4)
+                    vintage4.visibility = View.VISIBLE
+                    vintageo2.visibility = View.VISIBLE
+                    binding.vintage4.startAnimation(animation1)
+                    binding.vintage.startAnimation(animation1)
+                    binding.vintageo.startAnimation(animation4)
+
+
                 }
 
 
-            } else if (it == "Smoke" || it == "Broken clouds" || it == "Overcast clouds" || it == "Scattered clouds" || it == "Mist" || it == "Few clouds") {
+            } else if (it == "Smoke" || it == "Mist"
+                || it.lowercase().contains("clouds")) {
+
                 binding.apply {
-                    mainBack.setBackgroundResource(R.drawable.bg_rain)
+                    mainBack.setBackgroundResource(R.drawable.bg_sun)
                     WeatherImage.setImageResource(R.drawable.clouds)
+                    binding.updatedAt.setTextColor(Color.GRAY)
+
                     WeatherImage.tag = R.drawable.clouds
-                    vintage.startAnimation(animation1)
-                    vintageo.startAnimation(animation4)
+                    vintage4.visibility = View.VISIBLE
+                    vintageo2.visibility = View.VISIBLE
+                    binding.vintage4.startAnimation(animation1)
+                    binding.vintage.startAnimation(animation1)
+                    binding.vintageo.startAnimation(animation4)
                 }
 
 
@@ -347,21 +359,38 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     mainBack.setBackgroundResource(R.drawable.bg_sun)
                     WeatherImage.tag = 1
                     WeatherImage.setImageResource(R.drawable.sunny)
+                    binding.updatedAt.setTextColor(Color.WHITE)
+
                     vintage.visibility = View.GONE
                     vintage2.visibility = View.GONE
                     vintageo.visibility = View.GONE
+                    vintage4.visibility = View.GONE
+                    vintageo2.visibility = View.GONE
+
                 }
             } else {
                 binding.apply {
                     mainBack.setBackgroundResource(R.drawable.bg_sun)
                     WeatherImage.tag = 1
                     WeatherImage.setImageResource(R.drawable.sunny)
-                    vintage.visibility = View.GONE
-                    vintage2.visibility = View.GONE
-                    vintageo.visibility = View.GONE
+                    binding.updatedAt.setTextColor(Color.WHITE)
+
+                    vintage.visibility = View.VISIBLE
+                    vintage2.visibility = View.VISIBLE
+                    vintageo.visibility = View.VISIBLE
+                    vintage4.visibility = View.GONE
+                    vintageo2.visibility = View.GONE
+                    binding.vintage.startAnimation(animation1)
+                    binding.vintageo.startAnimation(animation4)
                 }
 
             }
+
+            binding.WeatherImage.startAnimation(animation3)
+            binding.WeatherImage.setOnClickListener {
+                binding.WeatherImage.startAnimation(animation3)
+            }
+
         }
 
 
@@ -377,21 +406,24 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     private fun setupEverything() {
 
 
+
+
         if (appRepository.isFirstLaunch()) {
             if (App.isConnectedToInternet(requireContext())) {
                 requestWeather(requestMode)
             }
+
         } else {
 
             if (App.isConnectedToInternet(requireContext())) {
                 requestWeather(requestMode)
+
             } else {
                 mainViewModel.getLastWeather().observe(viewLifecycleOwner) {
                     it.let {
 
                         if (it != null) {
-                            updateUi(it)
-
+                            uiListener.onUpdateUi(it)
                         } else {
                             Toast.makeText(
                                 requireContext(),
@@ -403,6 +435,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 }
             }
         }
+
+
     }
 
 
@@ -520,6 +554,10 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
             weatherJob.cancel()
         }
         isDestroyed = true
+    }
+
+    companion object {
+        private const val TAG = "ThirdFragment"
     }
 
 

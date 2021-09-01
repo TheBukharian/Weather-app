@@ -102,11 +102,11 @@ class BottomSheetExFragment : BottomSheetDialogFragment()  {
 
 
             btmList.setOnItemClickListener { parent, _, position, id ->
-                val itemText=parent.getItemAtPosition(position)as String
+                val itemText = parent.getItemAtPosition(position) as String
                 val adr = activity?.findViewById<TextView>(R.id.address)
 
 
-                mainViewModel.setSelectedCityName(itemText)
+                mainViewModel.setSelectedCityName(itemText.substringBefore(","))
 
 
                 if (adr != null) {
