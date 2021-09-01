@@ -309,6 +309,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
             ) {
                 binding.mainBack.setBackgroundResource(R.drawable.bg_rain)
                 binding.WeatherImage.setImageResource(R.drawable.rain)
+                binding.WeatherImage.visibility = View.GONE
+                binding.WeatherImageLottie.visibility = View.VISIBLE
                 binding.updatedAt.setTextColor(Color.GRAY)
                 binding.WeatherImage.tag = R.drawable.rain
                 binding.vintage4.visibility = View.VISIBLE
@@ -325,7 +327,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     mainBack.setBackgroundResource(R.drawable.bg_snow)
                     WeatherImage.setImageResource(R.drawable.snowflake)
                     binding.updatedAt.setTextColor(Color.GRAY)
-
+                    binding.WeatherImage.visibility = View.VISIBLE
+                    binding.WeatherImageLottie.visibility = View.GONE
                     WeatherImage.tag = R.drawable.snowflake
                     vintage4.visibility = View.VISIBLE
                     vintageo2.visibility = View.VISIBLE
@@ -341,10 +344,11 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 || it.lowercase().contains("clouds")) {
 
                 binding.apply {
-                    mainBack.setBackgroundResource(R.drawable.bg_sun)
+                    mainBack.setBackgroundResource(R.drawable.bg_snow)
                     WeatherImage.setImageResource(R.drawable.clouds)
                     binding.updatedAt.setTextColor(Color.GRAY)
-
+                    binding.WeatherImage.visibility = View.VISIBLE
+                    binding.WeatherImageLottie.visibility = View.GONE
                     WeatherImage.tag = R.drawable.clouds
                     vintage4.visibility = View.VISIBLE
                     vintageo2.visibility = View.VISIBLE
@@ -360,7 +364,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     WeatherImage.tag = 1
                     WeatherImage.setImageResource(R.drawable.sunny)
                     binding.updatedAt.setTextColor(Color.WHITE)
-
+                    binding.WeatherImage.visibility = View.VISIBLE
+                    binding.WeatherImageLottie.visibility = View.GONE
                     vintage.visibility = View.GONE
                     vintage2.visibility = View.GONE
                     vintageo.visibility = View.GONE
@@ -374,7 +379,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     WeatherImage.tag = 1
                     WeatherImage.setImageResource(R.drawable.sunny)
                     binding.updatedAt.setTextColor(Color.WHITE)
-
+                    binding.WeatherImage.visibility = View.VISIBLE
+                    binding.WeatherImageLottie.visibility = View.GONE
                     vintage.visibility = View.VISIBLE
                     vintage2.visibility = View.VISIBLE
                     vintageo.visibility = View.VISIBLE

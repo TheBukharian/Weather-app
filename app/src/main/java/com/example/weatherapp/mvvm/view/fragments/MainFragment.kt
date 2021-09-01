@@ -8,7 +8,9 @@ import com.example.weatherapp.databinding.MainFragmentBinding
 import com.example.weatherapp.mvvm.adapters.ViewPagerAdapter
 import com.example.weatherapp.mvvm.extensions.viewLifecycleLazy
 import com.google.android.material.tabs.TabLayoutMediator
-
+import android.view.LayoutInflater
+import android.widget.ImageView
+import android.widget.TextView
 
 
 open class MainFragment : BaseFragment(R.layout.main_fragment) {
@@ -25,8 +27,27 @@ open class MainFragment : BaseFragment(R.layout.main_fragment) {
 
 
             TabLayoutMediator(tabLayout, pager) { tab, position ->
-                tab.text = "OBJECT ${(position + 1)}"
-                tab.customView = layoutInflater.inflate(R.layout.tab_item_layout, null)
+                val v: View = LayoutInflater.from(context).inflate(R.layout.tab_item_layout, null)
+
+                val ItemImage = v.findViewById(R.id.imgText) as ImageView
+                val ItemText = v.findViewById(R.id.cardText) as TextView
+
+                when(position){
+                    0->{
+                        ItemImage.setImageResource(R.drawable.daily)
+                        ItemText.text = "Today"
+                    }
+
+                    1->{
+                        ItemImage.setImageResource(R.drawable.weekly)
+                        ItemText.text = "Week"
+
+                    }
+                }
+
+
+                tab.customView = v
+
 
             }.attach()
         }
