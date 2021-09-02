@@ -13,12 +13,14 @@
         android:supportsRtl="true"
         android:name=".mvvm.utilities.App"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:fullBackupContent="false">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-2343736594040989~4665001415"/>
 
-        <activity android:name=".mvvm.view.activities.WebPageActivity">
+        <activity android:name=".mvvm.view.activities.WebPageActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +31,9 @@
         <activity
             android:name=".mvvm.view.activities.MainActivity"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true"
+            tools:ignore="LockedOrientationActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

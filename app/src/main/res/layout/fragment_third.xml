@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#88E3E3E3"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".mvvm.view.fragments.ThirdFragment">
 
@@ -11,22 +12,10 @@
         android:id="@+id/mainBack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_rain"
-        android:orientation="vertical">
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        android:background="@drawable/bg_rain">
 
-
-        <TextView
-            android:id="@+id/Error"
-            android:layout_width="206dp"
-            android:layout_height="87dp"
-            android:layout_marginTop="150dp"
-            android:text="No Network Connection :("
-            android:textColor="#fff"
-            android:textSize="30sp"
-            android:layout_marginStart="100dp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            />
 
         <ImageView
             android:id="@+id/vintageo"
@@ -500,12 +489,12 @@
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:visibility="visible"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true"
                         android:scaleType="centerInside"
                         android:scaleX="1.2"
                         android:scaleY="1.2"
+                        android:visibility="visible"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
                         app:lottie_rawRes="@raw/rainy_lottie"
                         app:lottie_speed="1" />
 
@@ -515,26 +504,143 @@
             </RelativeLayout>
 
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@drawable/update_btn"
-                android:visibility="gone"
-                app:srcCompat="@android:drawable/ic_popup_sync" />
-
-
-            <ProgressBar
-                android:id="@+id/loader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone" />
-
 
         </RelativeLayout>
 
     </RelativeLayout>
 
-</FrameLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/loadingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="470dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/satelite"
+                android:layout_width="wrap_content"
+                android:layout_height="270dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/error2"
+                android:tintMode="src_atop" />
+
+
+            <TextView
+                android:id="@+id/couldntTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/satelite"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center_horizontal"
+                android:text="Connection Lost!"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+
+            <RelativeLayout
+                android:id="@+id/progressL"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="50dp"
+                android:animateLayoutChanges="true"
+                android:background="@drawable/rounded_tab_item"
+                android:backgroundTint="@color/greenBtn"
+                android:minWidth="50dp">
+
+                <LinearLayout
+
+                    android:id="@+id/progressLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
+                    android:weightSum="2">
+
+                    <ProgressBar
+                        android:id="@+id/progressbar"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="-20dp"
+                        android:indeterminateTint="@color/white"
+                        android:indeterminateTintMode="src_atop"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/loadingtext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Try Again"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+
+                </LinearLayout>
+
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/doneImg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/done"
+                    app:lottie_speed="0.5" />
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/networkTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loadingLayout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:text="Check your network connection \nand try again later."
+        android:textSize="15sp" />
+
+
+</RelativeLayout>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.view.animation.Animation
@@ -23,11 +24,13 @@ import com.example.weatherapp.mvvm.extensions.navigateSafe
 import com.example.weatherapp.mvvm.interfaces.UiUpdateListener
 import com.example.weatherapp.mvvm.utilities.App
 import com.example.weatherapp.mvvm.utilities.Constants
+import com.example.weatherapp.mvvm.utilities.ProgressButton
 import com.example.weatherapp.mvvm.view.activities.WebPageActivity
 import com.example.weatherapp.mvvm.viewmodel.MainViewModel
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
@@ -41,6 +44,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     private var _binding: FragmentThirdBinding? = null
     private val binding get() = _binding!!
 
+    private var tab: TabLayout? = null
     private val mainViewModel by viewModels<MainViewModel>()
 
     private lateinit var weatherJob: CompletableJob
@@ -48,6 +52,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     private var mInterstitialAd: InterstitialAd? = null
     private var requestMode = 2
     var isDestroyed = false
+    var fromDialog = false
 
 
     lateinit var animation1: Animation
@@ -103,12 +108,17 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
             R.anim.cloud_move
         )
 
+        tab = requireParentFragment().view?.findViewById<TabLayout>(R.id.tabLayout)
         animation3 = AnimationUtils.loadAnimation(requireActivity(), R.anim.fade_in)
 
         animation4 = AnimationUtils.loadAnimation(requireActivity(), R.anim.cloud2)
 
         binding.address.text = arguments?.getString("EXTRA_CITY")
         binding.address.paintFlags = binding.address.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
+
+
+
 
 
 
@@ -131,13 +141,16 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
     }
 
+
     @ExperimentalCoroutinesApi
     override fun onResume() {
         super.onResume()
 
         setupEverything()
 
+
     }
+
 
     private fun loadAd() {
         val adRequest = AdRequest.Builder().build()
@@ -158,7 +171,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 }
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d(Companion.TAG, "Ad was loaded.")
+                    Log.d(TAG, "Ad was loaded.")
                     mInterstitialAd = interstitialAd
                     Toast.makeText(requireContext(), "onAdLoaded()", Toast.LENGTH_SHORT).show()
                 }
@@ -199,6 +212,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
     @ExperimentalCoroutinesApi
     private fun requestWeather(mode: Int)  {
+        val progressBtn = ProgressButton(requireContext(), binding.progressL)
+
         weatherJob.cancel()
 
         weatherJob = Job()
@@ -208,7 +223,6 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 when (it.status) {
                     Resource.Status.SUCCESS -> {
                         if (it.data != null) {
-
 
                             it.data.let { response ->
                                 val weather = WeatherData(
@@ -233,24 +247,54 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                                 )
 
                                 mainViewModel.saveToDatabase(weather)
-                                uiListener.onUpdateUi(weather)
+
+                                if (fromDialog){
+                                    progressBtn.buttonDoneState()
+                                    Handler().postDelayed({
+                                        tab?.visibility = View.VISIBLE
+                                        binding.loadingLayout.visibility = View.GONE
+                                        binding.networkTxt.visibility = View.GONE
+                                        binding.mainBack.visibility = View.VISIBLE
+                                        uiListener.onUpdateUi(weather)
+                                    },2500)
+
+
+                                }else{
+                                    uiListener.onUpdateUi(weather)
+
+                                }
+                                fromDialog = false
                             }
                         }
                     }
 
                     Resource.Status.ERROR -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error on request from Api",
-                            Toast.LENGTH_SHORT
-                        ).show()
 
+
+                        binding.mainBack.visibility = View.GONE
+                        binding.loadingLayout.visibility = View.VISIBLE
+                        binding.networkTxt.visibility = View.VISIBLE
+
+
+                        progressBtn.initState()
+                        tab?.visibility = View.INVISIBLE
+
+                        if (fromDialog){
+                            progressBtn.errorState()
+                        }
+
+                        binding.progressL.setOnClickListener {
+                            fromDialog = true
+                            progressBtn.buttonPressed()
+                            Handler().postDelayed({
+                                requestWeather(requestMode)
+                            },1500)
+
+                        }
                     }
 
                     Resource.Status.LOADING -> {
-                        binding.loader.visibility = View.VISIBLE
-                        binding.mainContainer.visibility = View.GONE
-                        binding.imageButton.visibility = View.GONE
+
                     }
                 }
             }
@@ -401,11 +445,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
 
-        binding.apply {
-            loader.visibility = View.GONE
-            mainContainer.visibility = View.VISIBLE
-            Error.visibility = View.GONE
-        }
+
     }
 
     @ExperimentalCoroutinesApi
