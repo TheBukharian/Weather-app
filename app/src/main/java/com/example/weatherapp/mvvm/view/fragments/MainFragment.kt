@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.example.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView
 
 
 open class MainFragment : BaseFragment(R.layout.main_fragment) {

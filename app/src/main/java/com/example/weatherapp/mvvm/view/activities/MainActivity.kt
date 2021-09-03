@@ -45,7 +45,7 @@ import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), BottomSheetExFragment.BottomSheetListener{
+open class MainActivity : AppCompatActivity(), BottomSheetExFragment.BottomSheetListener{
 
     @Inject
     lateinit var appDataStore: AppDataStore

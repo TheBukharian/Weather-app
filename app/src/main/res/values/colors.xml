@@ -12,5 +12,9 @@
 
     <color name="transparentMilk">#54919191</color>
 
+    <color name="saffron">#F4B63E</color>
+    <color name="eggplant">#663D4E</color>
+    <color name="sienna">#EB6460</color>
+
 
 </resources>

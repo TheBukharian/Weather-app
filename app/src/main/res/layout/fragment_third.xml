@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -105,16 +106,13 @@
                     android:id="@+id/addressContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="30dp"
                     android:layout_marginTop="@dimen/margin_from_tab_layout"
-                    android:layout_marginEnd="30dp"
+                    android:layout_centerInParent="true"
                     android:background="@drawable/selector_rounded"
                     android:clickable="true"
                     android:focusable="true"
-                    android:gravity="center"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
 
@@ -132,6 +130,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
                         android:text="Check an updated info"
                         android:textColor="@color/white"
                         android:textSize="14sp" />

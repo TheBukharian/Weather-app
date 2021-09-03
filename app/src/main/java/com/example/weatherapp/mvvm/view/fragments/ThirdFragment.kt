@@ -25,6 +25,7 @@ import com.example.weatherapp.mvvm.interfaces.UiUpdateListener
 import com.example.weatherapp.mvvm.utilities.App
 import com.example.weatherapp.mvvm.utilities.Constants
 import com.example.weatherapp.mvvm.utilities.ProgressButton
+import com.example.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView
 import com.example.weatherapp.mvvm.view.activities.MainActivity
 import com.example.weatherapp.mvvm.view.activities.WebPageActivity
 import com.example.weatherapp.mvvm.viewmodel.MainViewModel
@@ -46,6 +47,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     private val binding get() = _binding!!
 
     private var tab: TabLayout? = null
+    private var pullRefreshView: PullToRefreshView? = null
     private val mainViewModel by viewModels<MainViewModel>()
 
     private lateinit var weatherJob: CompletableJob
@@ -96,12 +98,23 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
             appRepository.isFirstLaunch(false)
 
         }
+        tab = requireParentFragment().view?.findViewById(R.id.tabLayout)
+        pullRefreshView = requireParentFragment().view?.findViewById(R.id.pull_to_refresh)
 
         uiListener = object : UiUpdateListener{
             override fun onUpdateUi(weatherData: WeatherData) {
                 updateUi(weatherData)
+
             }
         }
+
+        pullRefreshView?.setOnRefreshListener {
+            pullRefreshView!!.postDelayed({
+                requestWeather(requestMode)
+
+            },1500)
+        }
+
 
 
         animation1 = AnimationUtils.loadAnimation(
@@ -109,7 +122,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
             R.anim.cloud_move
         )
 
-        tab = requireParentFragment().view?.findViewById<TabLayout>(R.id.tabLayout)
+
         animation3 = AnimationUtils.loadAnimation(requireActivity(), R.anim.fade_in)
 
         animation4 = AnimationUtils.loadAnimation(requireActivity(), R.anim.cloud2)
@@ -121,15 +134,6 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
 
-
-
-
-        binding.weatherUpdateBtn.setOnClickListener {
-
-
-            requestWeather(requestMode)
-            showInterstitial()
-        }
 
         binding.addressContainer.setOnClickListener {
             findNavController().navigateSafe(R.id.toBottomSheet)
@@ -263,6 +267,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
                                 }else{
+                                    pullRefreshView?.setRefreshing(false)
+
                                     uiListener.onUpdateUi(weather)
 
                                 }
@@ -272,6 +278,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     }
 
                     Resource.Status.ERROR -> {
+                        pullRefreshView?.setRefreshing(false)
 
                         binding.mainBack.visibility = View.GONE
                         binding.loadingLayout.visibility = View.VISIBLE

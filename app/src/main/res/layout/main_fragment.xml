@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.example.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView android:id="@+id/pull_to_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mvvm.view.fragments.MainFragment">
-    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        tools:context=".mvvm.view.fragments.MainFragment">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/pager"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            tools:ignore="UselessParent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_layout_height"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:background="#70FFFFFF"
+                app:tabMode="fixed"
+                app:tabTextColor="@color/white" />
+
+        </RelativeLayout>
 
 
-            />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_layout_height"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:background="#70FFFFFF"
-            app:tabMode="fixed"
-            app:tabTextColor="@color/white" />
-
-    </RelativeLayout>
-
-
-</FrameLayout>
+    </FrameLayout>
+</com.example.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView>
