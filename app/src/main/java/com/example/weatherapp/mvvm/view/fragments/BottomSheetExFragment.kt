@@ -113,9 +113,8 @@ class BottomSheetExFragment : BottomSheetDialogFragment()  {
                     adr.text=itemText
                 }
 
+                BaseFragment.showLoading(false,requireActivity() as MainActivity)
                 findNavController().navigateSafe(R.id.toMainFragment)
-                Toast.makeText(requireContext(),"${adr?.text} SELECTED",Toast.LENGTH_LONG).show()
-
             }
         }
     }

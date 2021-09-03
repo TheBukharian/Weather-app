@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 
 
 open class MainFragment : BaseFragment(R.layout.main_fragment) {
@@ -40,6 +41,9 @@ open class MainFragment : BaseFragment(R.layout.main_fragment) {
 
                     1->{
                         ItemImage.setImageResource(R.drawable.weekly)
+                        ItemImage.setColorFilter(
+                            ContextCompat.getColor(requireContext(),
+                            R.color.greenimg), android.graphics.PorterDuff.Mode.SRC_ATOP)
                         ItemText.text = "Week"
 
                     }

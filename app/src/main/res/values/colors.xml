@@ -8,8 +8,9 @@
     <color name="white">#FFFFFF</color>
     <color name="greenBtn">#62DC67</color>
     <color name="redBtn">#FD6F6F</color>
+    <color name="greenimg">#8B3AAFD3</color>
 
-
+    <color name="transparentMilk">#54919191</color>
 
 
 </resources>

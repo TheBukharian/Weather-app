@@ -21,6 +21,10 @@
         tools:layout="@layout/fragment_bottom_sheet_ex" >
         <action
             android:id="@+id/toMainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popUpTo="@id/mainFragment"
+
+            app:popUpToInclusive="true" />
     </dialog>
 </navigation>

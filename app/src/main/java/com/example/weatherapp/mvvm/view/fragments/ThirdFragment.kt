@@ -25,6 +25,7 @@ import com.example.weatherapp.mvvm.interfaces.UiUpdateListener
 import com.example.weatherapp.mvvm.utilities.App
 import com.example.weatherapp.mvvm.utilities.Constants
 import com.example.weatherapp.mvvm.utilities.ProgressButton
+import com.example.weatherapp.mvvm.view.activities.MainActivity
 import com.example.weatherapp.mvvm.view.activities.WebPageActivity
 import com.example.weatherapp.mvvm.viewmodel.MainViewModel
 import com.google.android.gms.ads.*
@@ -125,6 +126,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
         binding.weatherUpdateBtn.setOnClickListener {
 
+
             requestWeather(requestMode)
             showInterstitial()
         }
@@ -148,6 +150,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
         setupEverything()
 
+        hideLoading()
 
     }
 
@@ -269,7 +272,6 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     }
 
                     Resource.Status.ERROR -> {
-
 
                         binding.mainBack.visibility = View.GONE
                         binding.loadingLayout.visibility = View.VISIBLE
@@ -465,12 +467,36 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 requestWeather(requestMode)
 
             } else {
+                val progressBtn = ProgressButton(requireContext(), binding.progressL)
+
+
                 mainViewModel.getLastWeather().observe(viewLifecycleOwner) {
                     it.let {
 
                         if (it != null) {
                             uiListener.onUpdateUi(it)
                         } else {
+                            binding.mainBack.visibility = View.GONE
+                            binding.loadingLayout.visibility = View.VISIBLE
+                            binding.networkTxt.visibility = View.VISIBLE
+
+
+                            progressBtn.initState()
+                            tab?.visibility = View.INVISIBLE
+
+                            if (fromDialog){
+                                progressBtn.errorState()
+                            }
+
+                            binding.progressL.setOnClickListener {
+                                fromDialog = true
+                                progressBtn.buttonPressed()
+                                Handler().postDelayed({
+                                    requestWeather(requestMode)
+                                },1500)
+
+                            }
+
                             Toast.makeText(
                                 requireContext(),
                                 "No weather was found",

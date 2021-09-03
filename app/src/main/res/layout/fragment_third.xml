@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:visibility="visible"
-        android:background="@drawable/bg_rain">
+        android:background="@color/white">
 
 
         <ImageView
@@ -123,7 +123,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Tashkent, UZ"
+                        android:text=""
                         android:textColor="#555555"
                         android:textSize="21sp" />
 
@@ -156,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif-thin"
-                        android:text="11°C"
+                        android:text=""
                         android:textSize="90sp" />
 
                     <TextView
@@ -164,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Press Update"
+                        android:text="Pull down to update"
                         android:textSize="18sp" />
 
                     <LinearLayout
@@ -475,9 +475,9 @@
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:scaleType="centerInside"
                         android:clickable="true"
                         android:focusable="true"
+                        android:scaleType="centerInside"
                         android:visibility="gone"
                         app:srcCompat="@drawable/sunny" />
 
@@ -492,7 +492,7 @@
                         android:scaleType="centerInside"
                         android:scaleX="1.2"
                         android:scaleY="1.2"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"
                         app:lottie_rawRes="@raw/rainy_lottie"
@@ -575,6 +575,8 @@
                     android:layout_centerInParent="true"
                     android:orientation="horizontal"
                     android:visibility="visible"
+                    android:animateLayoutChanges="true"
+
                     android:weightSum="2">
 
                     <ProgressBar
@@ -584,6 +586,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="30dp"
                         android:layout_marginEnd="-20dp"
+                        android:animateLayoutChanges="true"
                         android:indeterminateTint="@color/white"
                         android:indeterminateTintMode="src_atop"
                         android:visibility="gone" />
@@ -617,7 +620,7 @@
                     app:lottie_autoPlay="true"
                     app:lottie_loop="false"
                     app:lottie_rawRes="@raw/done"
-                    app:lottie_speed="0.5" />
+                    app:lottie_speed="0.6" />
 
             </RelativeLayout>
 
