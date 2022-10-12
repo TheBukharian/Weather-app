@@ -24,37 +24,28 @@ open class MainFragment : BaseFragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
 
-            demoCollectionAdapter = ViewPagerAdapter(this@MainFragment)
-            pager.adapter = demoCollectionAdapter
+//            demoCollectionAdapter = ViewPagerAdapter(this@MainFragment)
+//            pager.adapter = demoCollectionAdapter
+//
+//
+//            TabLayoutMediator(tabLayout, pager) { tab, position ->
+//                val v: View = LayoutInflater.from(context).inflate(R.layout.tab_item_layout, null)
+//
+//                val ItemImage = v.findViewById(R.id.imgText) as ImageView
+//                val ItemText = v.findViewById(R.id.cardText) as TextView
+//
+//                when(position){
+//                    0->{
+//                        ItemImage.setImageResource(R.drawable.daily)
+//                        ItemText.text = "Today"
+//                    }
+//                }
+//
+//
+//                tab.customView = v
 
 
-            TabLayoutMediator(tabLayout, pager) { tab, position ->
-                val v: View = LayoutInflater.from(context).inflate(R.layout.tab_item_layout, null)
-
-                val ItemImage = v.findViewById(R.id.imgText) as ImageView
-                val ItemText = v.findViewById(R.id.cardText) as TextView
-
-                when(position){
-                    0->{
-                        ItemImage.setImageResource(R.drawable.daily)
-                        ItemText.text = "Today"
-                    }
-
-                    1->{
-                        ItemImage.setImageResource(R.drawable.weekly)
-                        ItemImage.setColorFilter(
-                            ContextCompat.getColor(requireContext(),
-                            R.color.greenimg), android.graphics.PorterDuff.Mode.SRC_ATOP)
-                        ItemText.text = "Week"
-
-                    }
-                }
-
-
-                tab.customView = v
-
-
-            }.attach()
+//            }.attach()
         }
 
     }

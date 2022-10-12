@@ -6,7 +6,6 @@ import com.example.weatherapp.mvvm.view.activities.MainActivity
 import com.example.weatherapp.mvvm.utilities.AppDataStore
 import com.example.weatherapp.mvvm.db.WeatherDatabase
 import com.example.weatherapp.mvvm.net.AppRetrofitService
-import com.example.weatherapp.mvvm.net.AuthInterceptor
 import com.example.weatherapp.mvvm.repositories.AppRepository
 import com.example.weatherapp.mvvm.utilities.Constants
 import com.facebook.stetho.okhttp3.BuildConfig
@@ -54,11 +53,7 @@ object AppModule {
         return AppDataStore(context)
     }
 
-    @Provides
-    @Singleton
-    fun provideAuthInterceptor(appDataStore: AppDataStore): AuthInterceptor {
-        return AuthInterceptor(appDataStore)
-    }
+
 
     @Provides
     @Singleton
@@ -73,7 +68,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        authInterceptor: AuthInterceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor,
         stethoInterceptor: StethoInterceptor
     ): OkHttpClient {
@@ -101,7 +95,6 @@ object AppModule {
 
         return OkHttpClient.Builder()
             .connectionSpecs(listOf(spec, ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
-            .addInterceptor(authInterceptor)
             .addNetworkInterceptor(stethoInterceptor)
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)

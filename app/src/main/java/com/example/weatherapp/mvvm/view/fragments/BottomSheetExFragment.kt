@@ -114,7 +114,7 @@ class BottomSheetExFragment : BottomSheetDialogFragment()  {
                 }
 
                 BaseFragment.showLoading(false,requireActivity() as MainActivity)
-                findNavController().navigateSafe(R.id.toMainFragment)
+                findNavController().navigateSafe(R.id.action_bottomSheetExFragment_to_thirdFragment)
             }
         }
     }

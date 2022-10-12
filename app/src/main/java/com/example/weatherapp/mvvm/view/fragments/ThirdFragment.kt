@@ -46,21 +46,19 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     private var _binding: FragmentThirdBinding? = null
     private val binding get() = _binding!!
 
-    private var tab: TabLayout? = null
     private var pullRefreshView: PullToRefreshView? = null
     private val mainViewModel by viewModels<MainViewModel>()
 
     private lateinit var weatherJob: CompletableJob
     private lateinit var uiListener: UiUpdateListener
-    private var mInterstitialAd: InterstitialAd? = null
     private var requestMode = 2
     var isDestroyed = false
     var fromDialog = false
 
 
-    lateinit var animation1: Animation
-    lateinit var animation3: Animation
-    lateinit var animation4: Animation
+    private lateinit var animation1: Animation
+    private lateinit var animation3: Animation
+    private lateinit var animation4: Animation
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,16 +67,14 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
             weatherJob = Job()
         }
 
-
         MobileAds.initialize(requireContext()) {}
 
-        MobileAds.setRequestConfiguration(
-            RequestConfiguration.Builder()
-                .setTestDeviceIds(listOf("868139039260754"))
-                .build()
-        )
-        showInterstitial()
+
+
+
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,15 +87,42 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
 
-    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (appRepository.isFirstLaunch()) {
             appRepository.isFirstLaunch(false)
-
         }
-        tab = requireParentFragment().view?.findViewById(R.id.tabLayout)
-        pullRefreshView = requireParentFragment().view?.findViewById(R.id.pull_to_refresh)
+
+        binding.adView.adListener = object: AdListener() {
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+
+            override fun onAdFailedToLoad(adError : LoadAdError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            override fun onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+            }
+
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+        }
+
+        pullRefreshView = binding.pullToRefresh
 
         uiListener = object : UiUpdateListener{
             override fun onUpdateUi(weatherData: WeatherData) {
@@ -107,6 +130,8 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
             }
         }
+
+
 
         pullRefreshView?.setOnRefreshListener {
             pullRefreshView!!.postDelayed({
@@ -136,7 +161,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
         binding.addressContainer.setOnClickListener {
-            findNavController().navigateSafe(R.id.toBottomSheet)
+            findNavController().navigateSafe(R.id.action_thirdFragment_to_bottomSheetExFragment)
         }
 
         binding.infoWeather.setOnClickListener {
@@ -148,9 +173,11 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     }
 
 
-    @ExperimentalCoroutinesApi
     override fun onResume() {
         super.onResume()
+
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         setupEverything()
 
@@ -159,63 +186,9 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
     }
 
 
-    private fun loadAd() {
-        val adRequest = AdRequest.Builder().build()
 
-        InterstitialAd.load(
-            requireContext(), Constants.AD_UNIT_ID, adRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d(Companion.TAG, adError.message)
-                    mInterstitialAd = null
-                    val error = "domain: ${adError.domain}, code: ${adError.code}, " +
-                            "message: ${adError.message}"
-                    Toast.makeText(
-                        requireContext(),
-                        "onAdFailedToLoad() with error $error",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
 
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d(TAG, "Ad was loaded.")
-                    mInterstitialAd = interstitialAd
-                    Toast.makeText(requireContext(), "onAdLoaded()", Toast.LENGTH_SHORT).show()
-                }
-            }
-        )
-    }
 
-    private fun showInterstitial() {
-        loadAd()
-        if (mInterstitialAd != null) {
-            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    Log.d(Companion.TAG, "Ad was dismissed.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
-                    mInterstitialAd = null
-                    loadAd()
-                }
-
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                    Log.d(Companion.TAG, "Ad failed to show.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
-                    mInterstitialAd = null
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    Log.d(Companion.TAG, "Ad showed fullscreen content.")
-                    // Called when ad is dismissed.
-                }
-            }
-            mInterstitialAd?.show(requireActivity())
-        } else {
-            Toast.makeText(requireContext(), "Ad wasn't loaded.", Toast.LENGTH_SHORT).show()
-            loadAd()
-        }
-    }
 
     @ExperimentalCoroutinesApi
     private fun requestWeather(mode: Int)  {
@@ -258,7 +231,6 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                                 if (fromDialog){
                                     progressBtn.buttonDoneState()
                                     Handler().postDelayed({
-                                        tab?.visibility = View.VISIBLE
                                         binding.loadingLayout.visibility = View.GONE
                                         binding.networkTxt.visibility = View.GONE
                                         binding.mainBack.visibility = View.VISIBLE
@@ -286,7 +258,6 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
                         progressBtn.initState()
-                        tab?.visibility = View.INVISIBLE
 
                         if (fromDialog){
                             progressBtn.errorState()
@@ -336,8 +307,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
             address.text = "${weather.city},${weather.country}"
-            updatedAt.text = "Updated at: $date"
-            status.text = weather.description
+            updatedAt.text = "Sana: $date"
             temp.text = "${tempNum}°C"
             sunrise.text = sunriseTime.toString()
             sunset.text = sunsetTime.toString()
@@ -371,6 +341,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                 binding.vintage4.startAnimation(animation1)
                 binding.vintage.startAnimation(animation1)
                 binding.vintageo.startAnimation(animation4)
+                binding.status.text = "Yomg'ir"
 
 
 
@@ -388,7 +359,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     binding.vintage4.startAnimation(animation1)
                     binding.vintage.startAnimation(animation1)
                     binding.vintageo.startAnimation(animation4)
-
+                    binding.status.text = "Qor"
 
                 }
 
@@ -408,6 +379,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     binding.vintage4.startAnimation(animation1)
                     binding.vintage.startAnimation(animation1)
                     binding.vintageo.startAnimation(animation4)
+                    binding.status.text = "Tuman"
                 }
 
 
@@ -424,7 +396,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     vintageo.visibility = View.GONE
                     vintage4.visibility = View.GONE
                     vintageo2.visibility = View.GONE
-
+                    binding.status.text = "Musaffo"
                 }
             } else {
                 binding.apply {
@@ -441,6 +413,7 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
                     vintageo2.visibility = View.GONE
                     binding.vintage.startAnimation(animation1)
                     binding.vintageo.startAnimation(animation4)
+                    binding.status.text = ""
                 }
 
             }
@@ -489,7 +462,6 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
 
 
                             progressBtn.initState()
-                            tab?.visibility = View.INVISIBLE
 
                             if (fromDialog){
                                 progressBtn.errorState()
@@ -525,10 +497,10 @@ class ThirdFragment : BaseFragment(R.layout.fragment_third) {
         inflater.inflate(R.menu.menu_nav, menu)
         val item = menu.findItem(R.id.switcher)
         item.setActionView(R.layout.switch_layout)
-        val mySwitch = item.actionView.findViewById<SwitchCompat>(R.id.switchForActionBar)
+        val mySwitch = item.actionView?.findViewById<SwitchCompat>(R.id.switchForActionBar)
         binding.apply {
 
-            mySwitch.setOnCheckedChangeListener { p0, isChecked ->
+            mySwitch?.setOnCheckedChangeListener { p0, isChecked ->
 
                 if (mySwitch.isChecked) {
                     Toast.makeText(requireContext(), "Dark Mode", Toast.LENGTH_LONG).show()
