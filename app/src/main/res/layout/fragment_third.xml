@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.example.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView android:id="@+id/pull_to_refresh"
+<com.uzbek.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView android:id="@+id/pull_to_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#88E3E3E3"
@@ -119,7 +119,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginHorizontal="30dp"
                         app:adSize="BANNER"
-                        app:adUnitId="ca-app-pub-3940256099942544/6300978111" />
+                        app:adUnitId="ca-app-pub-2343736594040989/3953659746" />
 
                     <LinearLayout
                         android:id="@+id/addressContainer"
@@ -664,4 +664,4 @@
 
 
     </RelativeLayout>
-</com.example.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView>
+</com.uzbek.weatherapp.mvvm.utilities.pulltorefresh.PullToRefreshView>

@@ -19,6 +19,17 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+
+    signingConfigs {
+        release {
+            storeFile file("../keystore.jks")
+            storePassword "121212"
+            keyAlias "key0"
+            keyPassword "121212"
+        }
+    }
+
     buildFeatures {
         viewBinding = true
     }
@@ -37,6 +48,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
